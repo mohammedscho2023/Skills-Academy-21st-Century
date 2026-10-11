@@ -1,0 +1,3174 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>21st Century Skills Academy — Learn. Practice. Apply. Certify.</title>
+<meta name="description" content="A unified hybrid LMS for 21st century skills with a full admin panel for course design, upload and management.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   1. DESIGN TOKENS
+   ============================================================ */
+:root{
+  --bg:#08081a; --bg-2:#101028;
+  --surface:rgba(255,255,255,.045); --surface-2:rgba(255,255,255,.07);
+  --border:rgba(255,255,255,.10); --border-strong:rgba(255,255,255,.20);
+  --text:#eef0ff; --muted:#9ba1c4;
+  --primary:#6366f1; --primary-2:#8b5cf6; --accent:#06b6d4;
+  --success:#10b981; --warn:#f59e0b; --danger:#ef4444; --pink:#ec4899;
+  --grad:linear-gradient(135deg,#6366f1 0%,#8b5cf6 45%,#06b6d4 100%);
+  --grad-soft:linear-gradient(135deg,rgba(99,102,241,.18),rgba(6,182,212,.12));
+  --shadow:0 20px 60px -20px rgba(0,0,0,.7);
+  --radius:18px; --radius-sm:12px; --maxw:1240px; --nav-h:72px;
+}
+[data-theme="light"]{
+  --bg:#f6f7fd; --bg-2:#ffffff;
+  --surface:rgba(15,18,60,.035); --surface-2:rgba(15,18,60,.06);
+  --border:rgba(15,18,60,.10); --border-strong:rgba(15,18,60,.22);
+  --text:#0e1130; --muted:#5b6183;
+  --shadow:0 20px 50px -22px rgba(30,35,90,.35);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{
+  font-family:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  background:var(--bg); color:var(--text); line-height:1.65; overflow-x:hidden;
+  -webkit-font-smoothing:antialiased; transition:background .4s,color .4s;
+}
+body::before{
+  content:'';position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background:
+    radial-gradient(900px 500px at 12% -5%,rgba(99,102,241,.28),transparent 60%),
+    radial-gradient(800px 500px at 88% 8%,rgba(6,182,212,.18),transparent 60%),
+    radial-gradient(700px 600px at 50% 110%,rgba(139,92,246,.16),transparent 60%);
+}
+[data-theme="light"] body::before{
+  background:
+    radial-gradient(900px 500px at 12% -5%,rgba(99,102,241,.16),transparent 60%),
+    radial-gradient(800px 500px at 88% 8%,rgba(6,182,212,.12),transparent 60%),
+    radial-gradient(700px 600px at 50% 110%,rgba(139,92,246,.10),transparent 60%);
+}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:none;background:none}
+::selection{background:var(--primary);color:#fff}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:20px}
+::-webkit-scrollbar-thumb:hover{background:var(--primary)}
+
+/* ============================================================
+   2. UTILITIES
+   ============================================================ */
+.container{width:min(100% - 40px,var(--maxw));margin-inline:auto}
+.gradient-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:.74rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);padding:7px 15px;border-radius:100px;
+  border:1px solid var(--border);background:var(--surface);backdrop-filter:blur(10px);
+}
+.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--success);box-shadow:0 0 10px var(--success);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.35)}}
+.section{padding:96px 0;position:relative}
+.section-head{max-width:760px;margin:0 auto 56px;text-align:center}
+.section-head h2{font-size:clamp(1.85rem,4vw,2.9rem);font-weight:800;letter-spacing:-.03em;line-height:1.15;margin:18px 0 16px}
+.section-head p{color:var(--muted);font-size:1.05rem}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  padding:14px 26px;border-radius:100px;font-weight:700;font-size:.94rem;
+  letter-spacing:-.01em;border:1px solid transparent;white-space:nowrap;
+  transition:transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .25s,background .25s,border-color .25s,opacity .25s;
+}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--grad);color:#fff;box-shadow:0 10px 30px -8px rgba(99,102,241,.7)}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 18px 40px -10px rgba(99,102,241,.9)}
+.btn-ghost{background:var(--surface);color:var(--text);border-color:var(--border);backdrop-filter:blur(12px)}
+.btn-ghost:hover{border-color:var(--primary);background:var(--surface-2);transform:translateY(-3px)}
+.btn-danger{background:rgba(239,68,68,.15);color:#f87171;border-color:rgba(239,68,68,.3)}
+.btn-danger:hover{background:rgba(239,68,68,.25);transform:translateY(-3px)}
+.btn-success{background:rgba(16,185,129,.15);color:#34d399;border-color:rgba(16,185,129,.3)}
+.btn-success:hover{background:rgba(16,185,129,.25);transform:translateY(-3px)}
+.btn-sm{padding:9px 18px;font-size:.82rem}
+.btn-block{width:100%}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);backdrop-filter:blur(14px);transition:transform .35s cubic-bezier(.34,1.4,.64,1),border-color .3s,background .3s,box-shadow .35s}
+.card:hover{transform:translateY(-7px);border-color:var(--border-strong);box-shadow:var(--shadow)}
+
+.reveal{opacity:0;transform:translateY(34px);transition:opacity .75s cubic-bezier(.16,1,.3,1),transform .75s cubic-bezier(.16,1,.3,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ============================================================
+   3. NAVBAR
+   ============================================================ */
+.nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:1000;display:flex;align-items:center;border-bottom:1px solid transparent;transition:background .35s,backdrop-filter .35s,border-color .35s}
+.nav.scrolled{background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(18px) saturate(160%);border-bottom-color:var(--border)}
+.nav .container{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.logo{display:flex;align-items:center;gap:11px;font-weight:800;font-size:1.05rem;letter-spacing:-.02em}
+.logo-mark{width:38px;height:38px;border-radius:11px;background:var(--grad);display:grid;place-items:center;font-size:1.05rem;font-weight:800;color:#fff;box-shadow:0 8px 22px -8px rgba(99,102,241,.9);flex-shrink:0}
+.logo small{display:block;font-size:.62rem;font-weight:600;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;line-height:1}
+.nav-links{display:flex;align-items:center;gap:4px;list-style:none}
+.nav-links a{padding:9px 15px;border-radius:100px;font-size:.88rem;font-weight:600;color:var(--muted);transition:color .22s,background .22s}
+.nav-links a:hover,.nav-links a.active{color:var(--text);background:var(--surface)}
+.nav-actions{display:flex;align-items:center;gap:10px}
+.icon-btn{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--border);background:var(--surface);font-size:1rem;transition:border-color .25s,transform .25s,background .25s}
+.icon-btn:hover{border-color:var(--primary);transform:rotate(15deg) scale(1.06)}
+.burger{display:none;flex-direction:column;gap:5px;width:42px;height:42px;border-radius:12px;border:1px solid var(--border);background:var(--surface);align-items:center;justify-content:center}
+.burger span{width:18px;height:2px;background:var(--text);border-radius:2px;transition:.3s}
+.burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* ============================================================
+   4. HERO / LANDING
+   ============================================================ */
+.hero{padding:calc(var(--nav-h) + 74px) 0 90px;position:relative;overflow:hidden}
+.hero .container{display:grid;grid-template-columns:1.08fr .92fr;gap:60px;align-items:center}
+.hero h1{font-size:clamp(2.3rem,5.4vw,4.05rem);font-weight:800;line-height:1.06;letter-spacing:-.045em;margin:22px 0 22px}
+.hero p.lead{font-size:1.1rem;color:var(--muted);max-width:560px;margin-bottom:34px}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:44px}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;max-width:600px}
+.stat h3{font-size:clamp(1.4rem,2.6vw,1.95rem);font-weight:800;letter-spacing:-.03em;line-height:1}
+.stat span{font-size:.73rem;color:var(--muted);font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+
+.hero-visual{position:relative;display:grid;place-items:center;min-height:440px}
+.orbit{position:absolute;border:1px dashed var(--border);border-radius:50%;animation:spin 30s linear infinite}
+.orbit.o1{width:290px;height:290px}
+.orbit.o2{width:410px;height:410px;animation-duration:48s;animation-direction:reverse}
+.orbit.o3{width:520px;height:520px;animation-duration:70s;opacity:.5}
+@keyframes spin{to{transform:rotate(360deg)}}
+.orbit .node{position:absolute;top:-17px;left:50%;translate:-50% 0;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-size:1.05rem;background:var(--bg-2);border:1px solid var(--border-strong);box-shadow:var(--shadow)}
+.hero-card{position:relative;z-index:3;width:100%;max-width:340px;background:color-mix(in srgb,var(--bg-2) 82%,transparent);border:1px solid var(--border-strong);border-radius:24px;padding:24px;backdrop-filter:blur(22px);box-shadow:var(--shadow)}
+.hero-card h4{font-size:.72rem;text-transform:uppercase;letter-spacing:.13em;color:var(--muted);font-weight:700;margin-bottom:16px}
+.hc-row{display:flex;align-items:center;gap:12px;margin-bottom:15px}
+.hc-icon{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-size:1rem;flex-shrink:0;background:var(--grad-soft);border:1px solid var(--border)}
+.hc-info{flex:1;min-width:0}
+.hc-info b{display:block;font-size:.83rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hc-info small{font-size:.7rem;color:var(--muted)}
+.bar{height:6px;border-radius:100px;background:var(--surface-2);overflow:hidden;margin-top:5px}
+.bar i{display:block;height:100%;border-radius:100px;background:var(--grad);width:0;transition:width 1.6s cubic-bezier(.16,1,.3,1)}
+.hc-badge{font-size:.7rem;font-weight:800;color:var(--success)}
+
+/* ============================================================
+   5. PILLARS / SKILLS / CATALOG
+   ============================================================ */
+.pillars-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(228px,1fr));gap:20px}
+.pillar{padding:28px 24px;position:relative;overflow:hidden}
+.pillar::after{content:'';position:absolute;inset:auto -30% -60% auto;width:170px;height:170px;border-radius:50%;background:var(--grad-soft);filter:blur(30px);opacity:0;transition:opacity .45s}
+.pillar:hover::after{opacity:1}
+.pillar .p-num{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:600;color:var(--muted);letter-spacing:.1em;margin-bottom:16px;display:block}
+.pillar .p-icon{width:50px;height:50px;border-radius:14px;display:grid;place-items:center;font-size:1.4rem;background:var(--grad-soft);border:1px solid var(--border);margin-bottom:18px;transition:transform .4s cubic-bezier(.34,1.5,.64,1)}
+.pillar:hover .p-icon{transform:scale(1.12) rotate(-8deg)}
+.pillar h3{font-size:1.03rem;font-weight:700;margin-bottom:9px;letter-spacing:-.02em}
+.pillar p{font-size:.86rem;color:var(--muted);line-height:1.6}
+.pillar .p-src{display:block;margin-top:14px;font-size:.7rem;color:var(--accent);font-weight:700;letter-spacing:.05em}
+
+.skills-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:18px}
+.skill{padding:24px;border-radius:var(--radius);cursor:pointer;position:relative;overflow:hidden;border:1px solid var(--border);background:var(--surface);backdrop-filter:blur(14px);transition:transform .32s cubic-bezier(.34,1.4,.64,1),border-color .3s,box-shadow .3s}
+.skill:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
+.skill.active{border-color:transparent;box-shadow:0 0 0 2px var(--primary),var(--shadow)}
+.skill-top{display:flex;align-items:center;gap:13px;margin-bottom:14px}
+.skill-ico{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;font-size:1.3rem;flex-shrink:0}
+.skill h3{font-size:1rem;font-weight:700;letter-spacing:-.02em}
+.skill .lvl{font-size:.7rem;color:var(--muted);font-weight:600}
+.skill p{font-size:.855rem;color:var(--muted);line-height:1.6;margin-bottom:16px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font-size:.7rem;font-weight:600;padding:5px 11px;border-radius:100px;background:var(--surface-2);border:1px solid var(--border);color:var(--muted)}
+.skill-detail{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.16,1,.3,1),opacity .4s;opacity:0;border-top:1px solid var(--border);margin-top:0}
+.skill.active .skill-detail{max-height:280px;opacity:1;margin-top:18px;padding-top:16px}
+.skill-detail ul{list-style:none;display:grid;gap:8px}
+.skill-detail li{font-size:.82rem;color:var(--muted);display:flex;gap:9px;align-items:flex-start}
+.skill-detail li::before{content:'✓';color:var(--success);font-weight:800;flex-shrink:0}
+
+.catalog-controls{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;margin-bottom:32px;padding:16px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);backdrop-filter:blur(14px)}
+.filters{display:flex;flex-wrap:wrap;gap:8px}
+.filter-btn{padding:9px 17px;border-radius:100px;font-size:.82rem;font-weight:600;border:1px solid var(--border);background:transparent;color:var(--muted);transition:all .25s}
+.filter-btn:hover{color:var(--text);border-color:var(--border-strong)}
+.filter-btn.active{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 8px 20px -8px rgba(99,102,241,.8)}
+.search-box{position:relative;flex:1;min-width:220px;max-width:320px}
+.search-box input{width:100%;padding:11px 16px 11px 42px;border-radius:100px;border:1px solid var(--border);background:var(--bg-2);color:var(--text);font-size:.86rem;outline:none;transition:border-color .25s,box-shadow .25s}
+.search-box input:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(99,102,241,.16)}
+.search-box input::placeholder{color:var(--muted)}
+.search-box svg{position:absolute;left:15px;top:50%;translate:0 -50%;width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:2}
+
+.course-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(288px,1fr));gap:20px}
+.course{padding:0;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;animation:fadeUp .5s cubic-bezier(.16,1,.3,1) backwards}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.course-banner{height:104px;display:grid;place-items:center;font-size:2.3rem;position:relative;overflow:hidden}
+.course-banner::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.35))}
+.course-level{position:absolute;top:12px;right:12px;z-index:2;font-size:.66rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:5px 11px;border-radius:100px;background:rgba(0,0,0,.5);color:#fff;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.2)}
+.course-body{padding:18px 20px 20px;display:flex;flex-direction:column;flex:1}
+.course-domain{font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.course h3{font-size:1rem;font-weight:700;line-height:1.35;letter-spacing:-.02em;margin-bottom:8px}
+.course .desc{font-size:.82rem;color:var(--muted);line-height:1.55;margin-bottom:16px;flex:1}
+.course-meta{display:flex;align-items:center;gap:14px;padding-top:14px;border-top:1px solid var(--border);font-size:.75rem;color:var(--muted);font-weight:600}
+.course-meta .star{color:var(--warn)}
+.course-meta .right{margin-left:auto;color:var(--accent);font-weight:700}
+.no-results{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted)}
+.no-results span{font-size:2.6rem;display:block;margin-bottom:12px}
+
+/* ============================================================
+   6. CREDENTIALS / PRICING / DASHBOARD
+   ============================================================ */
+.ladder{display:grid;gap:14px;max-width:940px;margin:0 auto}
+.rung{display:grid;grid-template-columns:78px 1fr auto;gap:22px;align-items:center;padding:22px 26px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);backdrop-filter:blur(14px);transition:transform .35s cubic-bezier(.34,1.4,.64,1),border-color .3s,background .3s;position:relative;overflow:hidden}
+.rung::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--grad);transform:scaleY(0);transform-origin:top;transition:transform .4s}
+.rung:hover::before{transform:scaleY(1)}
+.rung:hover{transform:translateX(9px);border-color:var(--border-strong);background:var(--surface-2)}
+.rung-num{width:58px;height:58px;border-radius:16px;display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:1.25rem;background:var(--grad-soft);border:1px solid var(--border)}
+.rung h3{font-size:1.02rem;font-weight:700;margin-bottom:5px;letter-spacing:-.02em}
+.rung p{font-size:.83rem;color:var(--muted)}
+.rung-tag{font-size:.7rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:8px 15px;border-radius:100px;border:1px solid var(--border);background:var(--surface-2);color:var(--accent);white-space:nowrap}
+
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;align-items:start}
+.plan{padding:32px 26px;display:flex;flex-direction:column;position:relative}
+.plan.featured{border-color:transparent;background:linear-gradient(var(--bg-2),var(--bg-2)) padding-box,var(--grad) border-box;border:2px solid transparent;transform:scale(1.035);z-index:2}
+.plan.featured:hover{transform:scale(1.035) translateY(-7px)}
+.plan-tag{position:absolute;top:-13px;left:50%;translate:-50% 0;background:var(--grad);color:#fff;font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:6px 16px;border-radius:100px;box-shadow:0 8px 20px -6px rgba(99,102,241,.9);white-space:nowrap}
+.plan h3{font-size:1.02rem;font-weight:800;letter-spacing:-.02em;margin-bottom:7px}
+.plan .plan-desc{font-size:.8rem;color:var(--muted);margin-bottom:22px;min-height:38px}
+.price{display:flex;align-items:baseline;gap:5px;margin-bottom:6px}
+.price b{font-size:2.5rem;font-weight:800;letter-spacing:-.045em;line-height:1}
+.price span{font-size:.85rem;color:var(--muted);font-weight:600}
+.plan .billed{font-size:.72rem;color:var(--muted);margin-bottom:24px}
+.plan ul{list-style:none;display:grid;gap:11px;margin-bottom:28px;flex:1}
+.plan li{font-size:.83rem;color:var(--muted);display:flex;gap:10px;align-items:flex-start;line-height:1.5}
+.plan li::before{content:'✓';flex-shrink:0;width:17px;height:17px;border-radius:50%;display:grid;place-items:center;font-size:.62rem;font-weight:800;background:var(--grad-soft);color:var(--success);margin-top:2px}
+.plan li.off{opacity:.42}
+.plan li.off::before{content:'—';color:var(--muted)}
+
+.dash{border-radius:24px;border:1px solid var(--border);overflow:hidden;background:color-mix(in srgb,var(--bg-2) 85%,transparent);backdrop-filter:blur(18px);box-shadow:var(--shadow)}
+.dash-bar{display:flex;align-items:center;gap:9px;padding:14px 18px;border-bottom:1px solid var(--border);background:var(--surface)}
+.dot-r{width:11px;height:11px;border-radius:50%;background:#ff5f57}
+.dot-y{width:11px;height:11px;border-radius:50%;background:#febc2e}
+.dot-g{width:11px;height:11px;border-radius:50%;background:#28c840}
+.dash-url{margin-left:12px;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);background:var(--bg);padding:5px 14px;border-radius:100px;border:1px solid var(--border)}
+.dash-body{display:grid;grid-template-columns:230px 1fr;min-height:430px}
+.dash-side{border-right:1px solid var(--border);padding:22px 18px;background:var(--surface)}
+.dash-side h5{font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:800;margin-bottom:14px}
+.side-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:11px;font-size:.83rem;font-weight:600;color:var(--muted);margin-bottom:4px;transition:.22s}
+.side-item:hover{background:var(--surface-2);color:var(--text)}
+.side-item.on{background:var(--grad-soft);color:var(--text);border:1px solid var(--border)}
+.dash-main{padding:26px 28px}
+.dash-main h4{font-size:1.15rem;font-weight:800;letter-spacing:-.025em;margin-bottom:5px}
+.dash-main>p{font-size:.83rem;color:var(--muted);margin-bottom:24px}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-bottom:26px}
+.kpi{padding:17px;border-radius:14px;border:1px solid var(--border);background:var(--surface)}
+.kpi b{display:block;font-size:1.55rem;font-weight:800;letter-spacing:-.035em;line-height:1;margin-bottom:5px}
+.kpi span{font-size:.7rem;color:var(--muted);font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+.progress-list{display:grid;gap:16px}
+.p-item{display:grid;gap:7px}
+.p-item .p-top{display:flex;justify-content:space-between;font-size:.81rem;font-weight:600}
+.p-item .p-top span:last-child{color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:.75rem}
+.p-bar{height:7px;border-radius:100px;background:var(--surface-2);overflow:hidden}
+.p-bar i{display:block;height:100%;border-radius:100px;background:var(--grad);width:0;transition:width 1.8s cubic-bezier(.16,1,.3,1)}
+
+/* ============================================================
+   7. ROADMAP / CTA / FOOTER
+   ============================================================ */
+.timeline{position:relative;max-width:900px;margin:0 auto;padding-left:34px}
+.timeline::before{content:'';position:absolute;left:9px;top:8px;bottom:8px;width:2px;background:linear-gradient(180deg,var(--primary),var(--accent),transparent)}
+.tl-item{position:relative;padding-bottom:38px}
+.tl-item:last-child{padding-bottom:0}
+.tl-item::before{content:'';position:absolute;left:-34px;top:5px;width:20px;height:20px;border-radius:50%;background:var(--bg-2);border:2px solid var(--primary);box-shadow:0 0 0 5px color-mix(in srgb,var(--primary) 18%,transparent)}
+.tl-item.done::before{background:var(--primary);border-color:var(--primary)}
+.tl-phase{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:600;color:var(--accent);letter-spacing:.09em;text-transform:uppercase;margin-bottom:7px;display:block}
+.tl-item h3{font-size:1.05rem;font-weight:700;margin-bottom:10px;letter-spacing:-.02em}
+.tl-item ul{list-style:none;display:grid;gap:6px}
+.tl-item li{font-size:.84rem;color:var(--muted);display:flex;gap:9px}
+.tl-item li::before{content:'▸';color:var(--primary);font-weight:800}
+
+.cta-box{text-align:center;padding:66px 34px;border-radius:28px;position:relative;overflow:hidden;border:1px solid var(--border-strong);background:linear-gradient(135deg,rgba(99,102,241,.18),rgba(6,182,212,.10));backdrop-filter:blur(18px)}
+.cta-box::before{content:'';position:absolute;top:-140px;left:50%;translate:-50% 0;width:520px;height:300px;border-radius:50%;background:var(--grad);filter:blur(120px);opacity:.4}
+.cta-box h2{position:relative;font-size:clamp(1.7rem,3.7vw,2.55rem);font-weight:800;letter-spacing:-.035em;margin-bottom:16px}
+.cta-box p{position:relative;color:var(--muted);max-width:560px;margin:0 auto 32px;font-size:1.02rem}
+.cta-box .hero-cta{position:relative;justify-content:center;margin-bottom:0}
+.cta-note{position:relative;margin-top:22px;font-size:.78rem;color:var(--muted)}
+
+footer{border-top:1px solid var(--border);padding:60px 0 34px;margin-top:90px}
+.foot-grid{display:grid;grid-template-columns:1.6fr repeat(3,1fr);gap:44px;margin-bottom:46px}
+.foot-brand p{font-size:.85rem;color:var(--muted);margin:16px 0 20px;max-width:290px;line-height:1.7}
+.socials{display:flex;gap:9px}
+.socials a{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;border:1px solid var(--border);background:var(--surface);font-size:.9rem;transition:.25s}
+.socials a:hover{border-color:var(--primary);transform:translateY(-4px);background:var(--surface-2)}
+.foot-col h5{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;font-weight:800;margin-bottom:17px;color:var(--text)}
+.foot-col ul{list-style:none;display:grid;gap:11px}
+.foot-col a{font-size:.85rem;color:var(--muted);transition:color .22s,padding-left .22s}
+.foot-col a:hover{color:var(--text);padding-left:5px}
+.foot-bottom{border-top:1px solid var(--border);padding-top:24px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:.79rem;color:var(--muted)}
+.foot-bottom a:hover{color:var(--text)}
+
+/* ============================================================
+   8. MODAL (course preview)
+   ============================================================ */
+.modal{position:fixed;inset:0;z-index:2000;display:grid;place-items:center;padding:20px;background:rgba(4,4,16,.78);backdrop-filter:blur(9px);opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.modal.open{opacity:1;visibility:visible}
+.modal-card{width:min(100%,560px);max-height:88vh;overflow-y:auto;border-radius:24px;border:1px solid var(--border-strong);background:var(--bg-2);box-shadow:var(--shadow);transform:scale(.93) translateY(18px);transition:transform .38s cubic-bezier(.34,1.4,.64,1)}
+.modal.open .modal-card{transform:none}
+.modal-head{height:130px;display:grid;place-items:center;font-size:3.2rem;position:relative}
+.modal-close{position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.45);color:#fff;display:grid;place-items:center;font-size:1rem;border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(8px);transition:.25s;z-index:3}
+.modal-close:hover{transform:rotate(90deg);background:rgba(0,0,0,.7)}
+.modal-body{padding:26px 28px 30px}
+.modal-body .course-domain{margin-bottom:9px}
+.modal-body h3{font-size:1.4rem;font-weight:800;letter-spacing:-.03em;line-height:1.25;margin-bottom:12px}
+.modal-body>p{font-size:.9rem;color:var(--muted);line-height:1.7;margin-bottom:22px}
+.modal-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-bottom:24px}
+.ms{padding:14px;border-radius:13px;border:1px solid var(--border);background:var(--surface);text-align:center}
+.ms b{display:block;font-size:1.05rem;font-weight:800;letter-spacing:-.02em;margin-bottom:3px}
+.ms span{font-size:.66rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;font-weight:700}
+.modal-outcomes{list-style:none;display:grid;gap:10px;margin-bottom:26px}
+.modal-outcomes li{font-size:.85rem;color:var(--muted);display:flex;gap:10px;line-height:1.55}
+.modal-outcomes li::before{content:'✓';color:var(--success);font-weight:800;flex-shrink:0}
+
+/* ============================================================
+   9. ADMIN PANEL
+   ============================================================ */
+.admin-overlay{position:fixed;inset:0;background:var(--bg);z-index:1500;display:none;overflow-y:auto}
+.admin-overlay.open{display:block}
+.admin-header{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:14px 24px}
+.admin-header-inner{max-width:1500px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.admin-title{display:flex;align-items:center;gap:12px}
+.admin-title h2{font-size:1.15rem;font-weight:800;letter-spacing:-.02em}
+.admin-title .role-badge{font-size:.7rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;padding:5px 12px;border-radius:100px;background:var(--grad);color:#fff}
+.admin-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+.admin-layout{max-width:1500px;margin:0 auto;display:grid;grid-template-columns:240px 1fr;gap:24px;padding:24px}
+.admin-sidebar{position:sticky;top:90px;align-self:start;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;backdrop-filter:blur(14px)}
+.admin-sidebar h5{font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:800;margin-bottom:12px;padding:0 8px}
+.admin-nav-item{display:flex;align-items:center;gap:11px;padding:11px 14px;border-radius:12px;font-size:.88rem;font-weight:600;color:var(--muted);margin-bottom:3px;cursor:pointer;transition:.22s;border:1px solid transparent}
+.admin-nav-item:hover{background:var(--surface-2);color:var(--text)}
+.admin-nav-item.active{background:var(--grad-soft);color:var(--text);border-color:var(--border)}
+.admin-nav-item .badge{margin-left:auto;font-size:.66rem;font-weight:800;padding:2px 8px;border-radius:100px;background:var(--primary);color:#fff}
+
+.admin-main{min-width:0}
+.admin-view{display:none;animation:fadeUp .35s cubic-bezier(.16,1,.3,1)}
+.admin-view.active{display:block}
+.admin-page-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;margin-bottom:24px}
+.admin-page-head h1{font-size:1.6rem;font-weight:800;letter-spacing:-.03em;margin-bottom:6px}
+.admin-page-head p{font-size:.9rem;color:var(--muted);max-width:640px}
+
+.admin-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:24px}
+.admin-kpi{padding:20px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);position:relative;overflow:hidden}
+.admin-kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--grad)}
+.admin-kpi .kpi-label{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.admin-kpi .kpi-value{font-size:1.85rem;font-weight:800;letter-spacing:-.035em;line-height:1;margin-bottom:6px}
+.admin-kpi .kpi-trend{font-size:.75rem;font-weight:700;color:var(--success)}
+.admin-kpi .kpi-trend.down{color:var(--danger)}
+
+.admin-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:20px;backdrop-filter:blur(14px)}
+.admin-panel-head{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.admin-panel-head h3{font-size:1.05rem;font-weight:800;letter-spacing:-.02em}
+.admin-panel-head p{font-size:.82rem;color:var(--muted);margin-top:2px}
+
+.admin-table{width:100%;border-collapse:collapse;font-size:.86rem}
+.admin-table th{text-align:left;font-size:.7rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:11px 12px;border-bottom:1px solid var(--border);background:var(--surface-2)}
+.admin-table td{padding:13px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+.admin-table tr:hover td{background:var(--surface-2)}
+.admin-table tr:last-child td{border-bottom:none}
+.admin-table .row-actions{display:flex;gap:6px;justify-content:flex-end}
+.tbl-icon{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-size:1.05rem;flex-shrink:0;background:var(--grad-soft);border:1px solid var(--border)}
+.tbl-cell-title{display:flex;align-items:center;gap:12px}
+.tbl-cell-title b{font-size:.88rem;font-weight:700;display:block;line-height:1.3}
+.tbl-cell-title small{font-size:.72rem;color:var(--muted)}
+
+.status-pill{display:inline-flex;align-items:center;gap:6px;font-size:.7rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:4px 11px;border-radius:100px}
+.status-pill.published{background:rgba(16,185,129,.15);color:#34d399;border:1px solid rgba(16,185,129,.3)}
+.status-pill.draft{background:rgba(245,158,11,.15);color:#fbbf24;border:1px solid rgba(245,158,11,.3)}
+.status-pill.archived{background:rgba(148,163,184,.15);color:#94a3b8;border:1px solid rgba(148,163,184,.3)}
+
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.form-field{display:flex;flex-direction:column;gap:6px}
+.form-field.full{grid-column:1/-1}
+.form-field label{font-size:.78rem;font-weight:700;letter-spacing:.02em}
+.form-field label .req{color:var(--danger)}
+.form-field .hint{font-size:.72rem;color:var(--muted);font-weight:400}
+.form-field input,.form-field select,.form-field textarea{
+  width:100%;padding:11px 14px;border-radius:11px;border:1px solid var(--border);
+  background:var(--bg-2);color:var(--text);font-size:.88rem;outline:none;
+  transition:border-color .2s,box-shadow .2s;font-family:inherit;
+}
+.form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,.15)}
+.form-field textarea{resize:vertical;min-height:96px;line-height:1.6}
+
+.dropzone{border:2px dashed var(--border-strong);border-radius:var(--radius);padding:38px 22px;text-align:center;cursor:pointer;transition:.25s;background:var(--surface)}
+.dropzone:hover,.dropzone.over{border-color:var(--primary);background:var(--grad-soft)}
+.dropzone .dz-icon{font-size:2.6rem;margin-bottom:12px;display:block}
+.dropzone .dz-title{font-size:.98rem;font-weight:700;margin-bottom:6px}
+.dropzone .dz-meta{font-size:.8rem;color:var(--muted)}
+
+.module-builder{display:grid;gap:14px}
+.builder-module{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;position:relative;transition:.25s}
+.builder-module:hover{border-color:var(--border-strong)}
+.builder-module-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.builder-module-num{width:34px;height:34px;border-radius:10px;background:var(--grad);color:#fff;display:grid;place-items:center;font-size:.85rem;font-weight:800;flex-shrink:0}
+.builder-module-head input{flex:1;padding:9px 12px;border-radius:9px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-weight:700;font-size:.92rem;outline:none}
+.builder-module-head input:focus{border-color:var(--primary)}
+.builder-module-body{display:grid;gap:10px;padding-left:46px}
+.builder-module-body textarea,.builder-module-body input{padding:9px 12px;border-radius:9px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:.85rem;outline:none;width:100%;font-family:inherit}
+.builder-module-body textarea:focus,.builder-module-body input:focus{border-color:var(--primary)}
+.builder-module-body textarea{resize:vertical;min-height:66px;line-height:1.55}
+.builder-module-del{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:9px;background:rgba(239,68,68,.15);color:#f87171;display:grid;place-items:center;border:1px solid rgba(239,68,68,.25);cursor:pointer;transition:.2s}
+.builder-module-del:hover{background:rgba(239,68,68,.25)}
+
+.lesson-row{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-bottom:6px;align-items:center}
+.lesson-row input{padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:.82rem;outline:none}
+.lesson-row input:focus{border-color:var(--primary)}
+.lesson-row .lesson-del{width:30px;height:30px;border-radius:8px;background:rgba(239,68,68,.12);color:#f87171;border:1px solid rgba(239,68,68,.2);cursor:pointer;font-size:.75rem;display:grid;place-items:center}
+
+.add-lesson-btn{font-size:.78rem;font-weight:700;color:var(--accent);padding:6px 12px;border-radius:100px;border:1px dashed var(--border-strong);background:transparent;cursor:pointer;transition:.2s;margin-top:4px;width:fit-content}
+.add-lesson-btn:hover{border-color:var(--accent);background:rgba(6,182,212,.08)}
+
+.empty-state{text-align:center;padding:50px 24px;color:var(--muted)}
+.empty-state .es-icon{font-size:3rem;margin-bottom:14px;opacity:.5;display:block}
+.empty-state h3{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:6px}
+.empty-state p{font-size:.85rem;max-width:380px;margin:0 auto 16px}
+
+.chart-bars{display:flex;align-items:flex-end;gap:14px;height:180px;padding:20px 0;border-bottom:1px solid var(--border);margin-bottom:16px}
+.chart-bar{flex:1;background:var(--grad);border-radius:8px 8px 0 0;position:relative;transition:height 1s cubic-bezier(.16,1,.3,1);min-height:6px;opacity:.85}
+.chart-bar:hover{opacity:1}
+.chart-bar::after{content:attr(data-label);position:absolute;bottom:-24px;left:50%;translate:-50% 0;font-size:.7rem;color:var(--muted);font-weight:700;white-space:nowrap}
+.chart-bar::before{content:attr(data-value);position:absolute;top:-22px;left:50%;translate:-50% 0;font-size:.7rem;color:var(--text);font-weight:800;white-space:nowrap}
+
+.grade-table td input{width:64px;padding:5px 8px;border-radius:7px;border:1px solid var(--border);background:var(--bg-2);color:var(--text);font-size:.82rem;text-align:center;font-weight:700;outline:none}
+.grade-table td input:focus{border-color:var(--primary)}
+
+.discussion-thread{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;margin-bottom:12px}
+.discussion-thread-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.discussion-avatar{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:.8rem;background:var(--grad);color:#fff;flex-shrink:0}
+.discussion-thread-head b{font-size:.88rem;font-weight:700}
+.discussion-thread-head small{font-size:.72rem;color:var(--muted)}
+.discussion-body{font-size:.85rem;color:var(--muted);line-height:1.65}
+.discussion-reply{margin-top:12px;padding-left:16px;border-left:2px solid var(--border);font-size:.82rem;color:var(--muted)}
+
+.session-row{display:grid;grid-template-columns:80px 1fr auto;gap:14px;align-items:center;padding:14px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg-2);margin-bottom:9px}
+.session-date{text-align:center;padding:6px 8px;border-radius:9px;background:var(--grad-soft);border:1px solid var(--border)}
+.session-date b{display:block;font-size:1.05rem;font-weight:800;line-height:1}
+.session-date small{font-size:.66rem;color:var(--muted);text-transform:uppercase;font-weight:700;letter-spacing:.05em}
+.session-info b{display:block;font-size:.88rem;font-weight:700;margin-bottom:2px}
+.session-info small{font-size:.75rem;color:var(--muted)}
+.session-type{font-size:.7rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:4px 11px;border-radius:100px}
+.session-type.live{background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3)}
+.session-type.self{background:rgba(6,182,212,.15);color:#22d3ee;border:1px solid rgba(6,182,212,.3)}
+.session-type.hybrid{background:rgba(139,92,246,.15);color:#a78bfa;border:1px solid rgba(139,92,246,.3)}
+
+.toast{position:fixed;bottom:24px;left:50%;translate:-50% 0;background:var(--bg-2);color:var(--text);padding:13px 22px;border-radius:100px;font-size:.88rem;font-weight:600;box-shadow:var(--shadow);border:1px solid var(--border-strong);z-index:3000;transform:translate(-50%,140%);transition:transform .4s cubic-bezier(.34,1.4,.64,1);max-width:90vw;text-align:center}
+.toast.show{transform:translate(-50%,0)}
+.toast.success{border-color:rgba(16,185,129,.4)}
+.toast.error{border-color:rgba(239,68,68,.4)}
+
+.badge-pulse{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--success);box-shadow:0 0 8px var(--success);animation:pulse 2s infinite}
+
+/* ============================================================
+   10. RESPONSIVE
+   ============================================================ */
+@media(max-width:1024px){
+  .hero .container{grid-template-columns:1fr;gap:52px}
+  .hero-visual{min-height:360px;order:-1}
+  .hero p.lead{max-width:none}
+  .foot-grid{grid-template-columns:1fr 1fr;gap:36px}
+  .dash-body{grid-template-columns:1fr}
+  .dash-side{border-right:none;border-bottom:1px solid var(--border);display:flex;gap:8px;overflow-x:auto}
+  .dash-side h5{display:none}
+  .side-item{white-space:nowrap;margin-bottom:0}
+  .admin-layout{grid-template-columns:1fr}
+  .admin-sidebar{position:static;display:flex;gap:6px;overflow-x:auto;padding:10px}
+  .admin-sidebar h5{display:none}
+  .admin-nav-item{white-space:nowrap;margin-bottom:0}
+}
+@media(max-width:860px){
+  .nav-links{position:fixed;top:var(--nav-h);left:0;right:0;flex-direction:column;align-items:stretch;gap:4px;padding:18px;background:color-mix(in srgb,var(--bg) 97%,transparent);backdrop-filter:blur(22px);border-bottom:1px solid var(--border);transform:translateY(-140%);transition:transform .42s cubic-bezier(.16,1,.3,1)}
+  .nav-links.open{transform:none}
+  .nav-links a{padding:13px 16px;font-size:.95rem}
+  .burger{display:flex}
+  .nav-actions .btn{display:none}
+  .lesson-row{grid-template-columns:1fr 1fr auto}
+  .session-row{grid-template-columns:1fr auto}
+  .session-date{grid-row:span 1}
+}
+@media(max-width:640px){
+  .section{padding:68px 0}
+  .hero{padding-top:calc(var(--nav-h) + 44px)}
+  .hero-stats{grid-template-columns:repeat(2,1fr);gap:22px}
+  .hero-cta .btn{flex:1;justify-content:center}
+  .rung{grid-template-columns:1fr;gap:14px;padding:20px}
+  .rung-num{width:48px;height:48px;font-size:1.05rem}
+  .rung-tag{justify-self:start}
+  .plan.featured{transform:none}
+  .plan.featured:hover{transform:translateY(-7px)}
+  .foot-grid{grid-template-columns:1fr;gap:32px}
+  .cta-box{padding:48px 22px}
+  .catalog-controls{flex-direction:column;align-items:stretch}
+  .search-box{max-width:none}
+  .filters{overflow-x:auto;padding-bottom:4px;flex-wrap:nowrap}
+  .filter-btn{white-space:nowrap}
+  .dash-main{padding:20px}
+  .modal-stats{grid-template-columns:1fr}
+  .orbit.o3{display:none}
+  .admin-header{padding:12px 16px}
+  .admin-layout{padding:16px}
+  .builder-module-body{padding-left:0}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================ NAVBAR ============================ -->
+<header class="nav" id="nav">
+  <div class="container">
+    <a href="#home" class="logo">
+      <span class="logo-mark">21</span>
+      <span>Skills Academy<small>21st Century</small></span>
+    </a>
+
+    <nav>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#pillars">Pillars</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#courses">Courses</a></li>
+        <li><a href="#credentials">Credentials</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#roadmap">Roadmap</a></li>
+      </ul>
+    </nav>
+
+    <div class="nav-actions">
+      <button class="icon-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">🌙</button>
+      <button class="btn btn-ghost btn-sm" id="adminOpenBtn" title="Open Admin Panel">⚙️ Admin</button>
+      <a href="#pricing" class="btn btn-primary btn-sm">Start Free</a>
+      <button class="burger" id="burger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- ============================ HERO ============================ -->
+<section class="hero" id="home">
+  <div class="container">
+    <div>
+      <span class="eyebrow"><span class="dot"></span> One ecosystem · Every 21st century skill</span>
+      <h1>Learn the skills that <span class="gradient-text">actually matter</span> for the next decade.</h1>
+      <p class="lead">
+        Academic rigour, professional certification, creative practice, technical mastery and
+        life skills — unified in a single adaptive <strong>hybrid LMS</strong>. From K-12 foundations to
+        university-backed degrees and employer-verified credentials.
+      </p>
+
+      <div class="hero-cta">
+        <a href="#courses" class="btn btn-primary">🚀 Explore Courses</a>
+        <button class="btn btn-ghost" id="adminOpenBtnHero">⚙️ Open Admin Panel</button>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat"><h3 data-count="50000" data-suffix="+">0</h3><span>Courses</span></div>
+        <div class="stat"><h3 data-count="10000000" data-suffix="">0</h3><span>Learners</span></div>
+        <div class="stat"><h3 data-count="100" data-suffix="+">0</h3><span>Universities</span></div>
+        <div class="stat"><h3 data-count="98" data-suffix="%">0</h3><span>Completion</span></div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="orbit o1"><span class="node">🧠</span></div>
+      <div class="orbit o2"><span class="node">💻</span></div>
+      <div class="orbit o3"><span class="node">🎨</span></div>
+
+      <div class="hero-card">
+        <h4>Your Hybrid Learning Path · Live</h4>
+
+        <div class="hc-row">
+          <div class="hc-icon">🧠</div>
+          <div class="hc-info">
+            <b>Critical Thinking</b>
+            <small>Module 4 of 6 · Hybrid</small>
+            <div class="bar"><i data-w="68%"></i></div>
+          </div>
+        </div>
+
+        <div class="hc-row">
+          <div class="hc-icon">💻</div>
+          <div class="hc-info">
+            <b>Digital Literacy & AI</b>
+            <small>Module 7 of 8 · Live cohort</small>
+            <div class="bar"><i data-w="88%"></i></div>
+          </div>
+        </div>
+
+        <div class="hc-row">
+          <div class="hc-icon">🤝</div>
+          <div class="hc-info">
+            <b>Collaboration Lab</b>
+            <small>Module 2 of 5 · Self-paced</small>
+            <div class="bar"><i data-w="40%"></i></div>
+          </div>
+        </div>
+
+        <div class="hc-row" style="margin-bottom:0">
+          <div class="hc-icon">🏅</div>
+          <div class="hc-info">
+            <b>Next credential</b>
+            <small>Digital Citizen Certificate</small>
+          </div>
+          <span class="hc-badge">2 left</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ PILLARS ============================ -->
+<section class="section" id="pillars">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Architecture</span>
+      <h2>Five pillars. <span class="gradient-text">One academy.</span></h2>
+      <p>Every leading learning model, distilled into a single coherent ecosystem — so you never have to jump between five platforms again.</p>
+    </div>
+
+    <div class="pillars-grid">
+      <article class="card pillar reveal">
+        <span class="p-num">PILLAR 01</span>
+        <div class="p-icon">🏛️</div>
+        <h3>Academic Foundation</h3>
+        <p>University-backed courses, MicroBachelors, MicroMasters and full online degrees from global institutions.</p>
+        <span class="p-src">Inspired by edX · Coursera</span>
+      </article>
+
+      <article class="card pillar reveal">
+        <span class="p-num">PILLAR 02</span>
+        <div class="p-icon">💼</div>
+        <h3>Professional Skills</h3>
+        <p>Industry certifications, workplace competencies and career pathways wired directly into your professional profile.</p>
+        <span class="p-src">Inspired by LinkedIn Learning · Pluralsight</span>
+      </article>
+
+      <article class="card pillar reveal">
+        <span class="p-num">PILLAR 03</span>
+        <div class="p-icon">🎨</div>
+        <h3>Creative & Innovation</h3>
+        <p>Project-based learning in design, storytelling, entrepreneurship and the arts — built around real portfolios.</p>
+        <span class="p-src">Inspired by Skillshare · Udemy</span>
+      </article>
+
+      <article class="card pillar reveal">
+        <span class="p-num">PILLAR 04</span>
+        <div class="p-icon">⚡</div>
+        <h3>Data & Technology</h3>
+        <p>Interactive coding labs, data science, AI and cybersecurity with in-browser environments and instant feedback.</p>
+        <span class="p-src">Inspired by DataCamp · Codecademy</span>
+      </article>
+
+      <article class="card pillar reveal">
+        <span class="p-num">PILLAR 05</span>
+        <div class="p-icon">🌱</div>
+        <h3>Foundational Learning</h3>
+        <p>Free K-12 fundamentals, literacy, numeracy and test preparation — because access starts at the very beginning.</p>
+        <span class="p-src">Inspired by Khan Academy</span>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ SKILLS ============================ -->
+<section class="section" id="skills">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">The Framework</span>
+      <h2>The 4Cs <span class="gradient-text">+ Digital + Life</span></h2>
+      <p>Click any competency to reveal the learning outcomes and course tracks behind it.</p>
+    </div>
+
+    <div class="skills-wrap" id="skillsWrap"></div>
+  </div>
+</section>
+
+<!-- ============================ COURSES ============================ -->
+<section class="section" id="courses">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Catalog</span>
+      <h2>Browse the <span class="gradient-text">course library</span></h2>
+      <p>Filter by competency or search for exactly what you need. Click a card for full details.</p>
+    </div>
+
+    <div class="catalog-controls reveal">
+      <div class="filters" id="filters"></div>
+      <div class="search-box">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input type="search" id="searchInput" placeholder="Search courses…" aria-label="Search courses">
+      </div>
+    </div>
+
+    <div class="course-grid" id="courseGrid"></div>
+  </div>
+</section>
+
+<!-- ============================ CREDENTIALS ============================ -->
+<section class="section" id="credentials">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Recognition</span>
+      <h2>A credential ladder that <span class="gradient-text">compounds</span></h2>
+      <p>Every level builds on the last. Blockchain-verified, employer-readable, globally portable.</p>
+    </div>
+
+    <div class="ladder">
+      <div class="rung reveal">
+        <div class="rung-num">01</div>
+        <div><h3>Micro-Badge</h3><p>Complete a single course and pass its assessment.</p></div>
+        <span class="rung-tag">Platform Verified</span>
+      </div>
+      <div class="rung reveal">
+        <div class="rung-num">02</div>
+        <div><h3>Skill Certificate</h3><p>Finish a 3–5 course track and submit a practical project.</p></div>
+        <span class="rung-tag">Industry Recognised</span>
+      </div>
+      <div class="rung reveal">
+        <div class="rung-num">03</div>
+        <div><h3>Professional Diploma</h3><p>Complete 8–10 courses plus a capstone with a real client brief.</p></div>
+        <span class="rung-tag">Employer Endorsed</span>
+      </div>
+      <div class="rung reveal">
+        <div class="rung-num">04</div>
+        <div><h3>Advanced Specialisation</h3><p>Diploma plus two additional specialisations with portfolio review.</p></div>
+        <span class="rung-tag">University Partnered</span>
+      </div>
+      <div class="rung reveal">
+        <div class="rung-num">05</div>
+        <div><h3>Academy Fellowship</h3><p>Four specialisations plus an original thesis or venture project.</p></div>
+        <span class="rung-tag">Global Recognition</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ PRICING ============================ -->
+<section class="section" id="pricing">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Access</span>
+      <h2>Free forever. <span class="gradient-text">All-access when ready.</span></h2>
+      <p>One subscription unlocks the entire catalog — no per-course purchases, ever.</p>
+    </div>
+
+    <div class="pricing-grid">
+      <article class="card plan reveal">
+        <h3>Explorer</h3>
+        <p class="plan-desc">Start learning today with zero commitment.</p>
+        <div class="price"><b>$0</b><span>/forever</span></div>
+        <p class="billed">No card required</p>
+        <ul>
+          <li>100+ free courses</li>
+          <li>Basic completion badges</li>
+          <li>Community forum access</li>
+          <li>Mobile & offline mode</li>
+          <li class="off">Verified certificates</li>
+          <li class="off">Career coaching</li>
+        </ul>
+        <button class="btn btn-ghost btn-block">Start Free</button>
+      </article>
+
+      <article class="card plan reveal">
+        <h3>Learner</h3>
+        <p class="plan-desc">For individuals building a serious skill portfolio.</p>
+        <div class="price"><b>$29</b><span>/month</span></div>
+        <p class="billed">Billed monthly · cancel anytime</p>
+        <ul>
+          <li>Full catalog access</li>
+          <li>Blockchain-verified certificates</li>
+          <li>Interactive coding labs</li>
+          <li>Project workspaces</li>
+          <li>Downloadable resources</li>
+          <li class="off">1:1 career coaching</li>
+        </ul>
+        <button class="btn btn-primary btn-block">Choose Learner</button>
+      </article>
+
+      <article class="card plan featured reveal">
+        <span class="plan-tag">Most Popular</span>
+        <h3>Professional</h3>
+        <p class="plan-desc">Everything you need to change or accelerate your career.</p>
+        <div class="price"><b>$49</b><span>/month</span></div>
+        <p class="billed">Billed monthly · cancel anytime</p>
+        <ul>
+          <li>Everything in Learner</li>
+          <li>1:1 career & portfolio coaching</li>
+          <li>Priority mentor matching</li>
+          <li>Employer job-matching network</li>
+          <li>Live workshops & office hours</li>
+          <li>LinkedIn profile integration</li>
+        </ul>
+        <button class="btn btn-primary btn-block">Go Professional</button>
+      </article>
+
+      <article class="card plan reveal">
+        <h3>Enterprise</h3>
+        <p class="plan-desc">Upskill entire teams with admin control and reporting.</p>
+        <div class="price"><b>Custom</b></div>
+        <p class="billed">Volume pricing available</p>
+        <ul>
+          <li>Everything in Professional</li>
+          <li>Admin & analytics dashboard</li>
+          <li>Custom learning paths</li>
+          <li>SSO & API access</li>
+          <li>White-label option</li>
+          <li>Dedicated success manager</li>
+        </ul>
+        <button class="btn btn-ghost btn-block">Contact Sales</button>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ DASHBOARD ============================ -->
+<section class="section" id="dashboard">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Platform</span>
+      <h2>An adaptive dashboard that <span class="gradient-text">knows you</span></h2>
+      <p>AI-personalised paths, competency maps and real-time progress — for learners, educators and employers alike.</p>
+    </div>
+
+    <div class="dash reveal">
+      <div class="dash-bar">
+        <span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span>
+        <span class="dash-url">app.21stcenturyskills.academy/dashboard</span>
+      </div>
+
+      <div class="dash-body">
+        <aside class="dash-side">
+          <h5>Menu</h5>
+          <div class="side-item on">📊 Overview</div>
+          <div class="side-item">🗺️ Skill Map</div>
+          <div class="side-item">📚 My Courses</div>
+          <div class="side-item">🏅 Credentials</div>
+          <div class="side-item">👥 Community</div>
+          <div class="side-item">💼 Career</div>
+        </aside>
+
+        <div class="dash-main">
+          <h4>Welcome back, Amara 👋</h4>
+          <p>You're 68% through the Digital Citizen pathway. Two modules to your next credential.</p>
+
+          <div class="kpi-grid">
+            <div class="kpi"><b data-count="12" data-suffix="">0</b><span>Courses</span></div>
+            <div class="kpi"><b data-count="7" data-suffix="">0</b><span>Certificates</span></div>
+            <div class="kpi"><b data-count="94" data-suffix="h">0</b><span>Learning</span></div>
+            <div class="kpi"><b data-count="23" data-suffix="">0</b><span>Day Streak</span></div>
+          </div>
+
+          <div class="progress-list">
+            <div class="p-item">
+              <div class="p-top"><span>🧠 Critical Thinking</span><span>68%</span></div>
+              <div class="p-bar"><i data-w="68%"></i></div>
+            </div>
+            <div class="p-item">
+              <div class="p-top"><span>💻 Digital Literacy & AI</span><span>88%</span></div>
+              <div class="p-bar"><i data-w="88%"></i></div>
+            </div>
+            <div class="p-item">
+              <div class="p-top"><span>🤝 Collaboration Lab</span><span>40%</span></div>
+              <div class="p-bar"><i data-w="40%"></i></div>
+            </div>
+            <div class="p-item">
+              <div class="p-top"><span>🎨 Creative Practice</span><span>25%</span></div>
+              <div class="p-bar"><i data-w="25%"></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ ROADMAP ============================ -->
+<section class="section" id="roadmap">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Build Plan</span>
+      <h2>From zero to a <span class="gradient-text">global academy</span></h2>
+      <p>A 24-month implementation roadmap across four phases.</p>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-item done reveal">
+        <span class="tl-phase">Phase 1 · Months 1–6</span>
+        <h3>Foundation</h3>
+        <ul>
+          <li>Core LMS development on an open-source base</li>
+          <li>Content acquisition — 500 launch courses</li>
+          <li>Authentication, profiles and assessment engine</li>
+          <li>Web platform launch</li>
+        </ul>
+      </div>
+
+      <div class="tl-item reveal">
+        <span class="tl-phase">Phase 2 · Months 7–12</span>
+        <h3>Growth</h3>
+        <ul>
+          <li>iOS & Android mobile applications</li>
+          <li>AI personalisation engine</li>
+          <li>Interactive in-browser coding environment</li>
+          <li>Credential system launch · 2,000+ courses</li>
+        </ul>
+      </div>
+
+      <div class="tl-item reveal">
+        <span class="tl-phase">Phase 3 · Months 13–18</span>
+        <h3>Scale</h3>
+        <ul>
+          <li>University partnerships for credit-bearing courses</li>
+          <li>Employer ATS integration & talent pipeline</li>
+          <li>Blockchain-verified credentials</li>
+          <li>Live mentorship platform · 5,000+ courses</li>
+        </ul>
+      </div>
+
+      <div class="tl-item reveal">
+        <span class="tl-phase">Phase 4 · Months 19–24</span>
+        <h3>Ecosystem</h3>
+        <ul>
+          <li>VR / AR learning modules</li>
+          <li>Global expansion & multi-language support</li>
+          <li>Government workforce development contracts</li>
+          <li>Academy Fellowship programme · 10,000+ courses</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CTA ============================ -->
+<section class="section">
+  <div class="container">
+    <div class="cta-box reveal">
+      <h2>Your future skills start <span class="gradient-text">right now</span></h2>
+      <p>Join millions of learners building the competencies that matter. Free to start, no card required.</p>
+      <div class="hero-cta">
+        <a href="#courses" class="btn btn-primary">Create Free Account</a>
+        <a href="#pricing" class="btn btn-ghost">Compare Plans</a>
+      </div>
+      <p class="cta-note">✨ 100+ free courses · Cancel anytime · Blockchain-verified certificates</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ============================ FOOTER ============================ -->
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="#home" class="logo">
+          <span class="logo-mark">21</span>
+          <span>Skills Academy<small>21st Century</small></span>
+        </a>
+        <p>Democratising access to future-ready skills through one unified, adaptive and accessible learning ecosystem.</p>
+        <div class="socials">
+          <a href="#" aria-label="Twitter">𝕏</a>
+          <a href="#" aria-label="LinkedIn">in</a>
+          <a href="#" aria-label="YouTube">▶</a>
+          <a href="#" aria-label="GitHub">◆</a>
+        </div>
+      </div>
+
+      <div class="foot-col">
+        <h5>Learn</h5>
+        <ul>
+          <li><a href="#courses">Course Catalog</a></li>
+          <li><a href="#skills">Skills Framework</a></li>
+          <li><a href="#credentials">Credentials</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+        </ul>
+      </div>
+
+      <div class="foot-col">
+        <h5>Platform</h5>
+        <ul>
+          <li><a href="#dashboard">Dashboard</a></li>
+          <li><a href="#pillars">Five Pillars</a></li>
+          <li><a href="#roadmap">Roadmap</a></li>
+          <li><a href="#" id="adminOpenFooter">Admin Panel</a></li>
+        </ul>
+      </div>
+
+      <div class="foot-col">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Partners</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="foot-bottom">
+      <span>© 2025 21st Century Skills Academy. All rights reserved.</span>
+      <span>
+        <a href="#">Privacy</a> · <a href="#">Terms</a> · <a href="#">Accessibility</a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================ COURSE MODAL ============================ -->
+<div class="modal" id="modal">
+  <div class="modal-card">
+    <div class="modal-head" id="modalHead">
+      <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+      <span id="modalIcon">📘</span>
+    </div>
+    <div class="modal-body">
+      <div class="course-domain" id="modalDomain"></div>
+      <h3 id="modalTitle"></h3>
+      <p id="modalDesc"></p>
+
+      <div class="modal-stats">
+        <div class="ms"><b id="modalLevel"></b><span>Level</span></div>
+        <div class="ms"><b id="modalHours"></b><span>Hours</span></div>
+        <div class="ms"><b id="modalRating"></b><span>Rating</span></div>
+      </div>
+
+      <ul class="modal-outcomes" id="modalOutcomes"></ul>
+      <button class="btn btn-primary btn-block">Enrol Now — Free Trial</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================ ADMIN OVERLAY ============================ -->
+<div class="admin-overlay" id="adminOverlay">
+  <div class="admin-header">
+    <div class="admin-header-inner">
+      <div class="admin-title">
+        <span class="logo-mark">21</span>
+        <div>
+          <h2>Academy Admin Panel</h2>
+          <small style="font-size:.72rem;color:var(--muted)">Hybrid LMS · Course Designer · Learner Management</small>
+        </div>
+        <span class="role-badge">Administrator</span>
+      </div>
+      <div class="admin-actions">
+        <button class="btn btn-ghost btn-sm" id="exportAllBtn">⬇️ Export Data</button>
+        <button class="btn btn-primary btn-sm" id="adminCloseBtn">✕ Close Admin</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-layout">
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+      <h5>Management</h5>
+      <div class="admin-nav-item active" data-view="adminDashboard">📊 Dashboard</div>
+      <div class="admin-nav-item" data-view="adminCourses">📚 Courses <span class="badge" id="coursesCountBadge">0</span></div>
+      <div class="admin-nav-item" data-view="adminDesigner">✨ Course Designer</div>
+      <div class="admin-nav-item" data-view="adminUpload">⬆️ Upload Courses</div>
+      <h5 style="margin-top:14px">LMS</h5>
+      <div class="admin-nav-item" data-view="adminStudents">👥 Students <span class="badge" id="studentsCountBadge">0</span></div>
+      <div class="admin-nav-item" data-view="adminSchedule">📅 Live Sessions</div>
+      <div class="admin-nav-item" data-view="adminDiscussions">💬 Discussions</div>
+      <div class="admin-nav-item" data-view="adminGrades">📝 Gradebook</div>
+      <h5 style="margin-top:14px">Business</h5>
+      <div class="admin-nav-item" data-view="adminPayments">💳 Payments</div>
+      <div class="admin-nav-item" data-view="adminAnalytics">📈 Analytics</div>
+      <div class="admin-nav-item" data-view="adminSettings">⚙️ Settings</div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="admin-main">
+
+      <!-- Dashboard -->
+      <section class="admin-view active" id="adminDashboard">
+        <div class="admin-page-head">
+          <div>
+            <h1>Dashboard Overview</h1>
+            <p>Welcome back, Administrator. Here's what's happening across the academy today.</p>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="adminGo('adminDesigner')">✨ Create New Course</button>
+        </div>
+
+        <div class="admin-kpis">
+          <div class="admin-kpi">
+            <div class="kpi-label">Total Courses</div>
+            <div class="kpi-value" id="kpiCourses">0</div>
+            <div class="kpi-trend">▲ 12% this month</div>
+          </div>
+          <div class="admin-kpi">
+            <div class="kpi-label">Enrolled Students</div>
+            <div class="kpi-value" id="kpiStudents">0</div>
+            <div class="kpi-trend">▲ 8.4% this month</div>
+          </div>
+          <div class="admin-kpi">
+            <div class="kpi-label">Completion Rate</div>
+            <div class="kpi-value">87%</div>
+            <div class="kpi-trend">▲ 3.1% this month</div>
+          </div>
+          <div class="admin-kpi">
+            <div class="kpi-label">Revenue (ETB)</div>
+            <div class="kpi-value" id="kpiRevenue">0</div>
+            <div class="kpi-trend">▲ 24% this month</div>
+          </div>
+        </div>
+
+        <div class="admin-panel">
+          <div class="admin-panel-head">
+            <div>
+              <h3>Enrollment Trend (Last 6 Months)</h3>
+              <p>New learner enrollments across all courses</p>
+            </div>
+          </div>
+          <div class="chart-bars">
+            <div class="chart-bar" style="height:45%" data-value="1.2K" data-label="May"></div>
+            <div class="chart-bar" style="height:62%" data-value="1.8K" data-label="Jun"></div>
+            <div class="chart-bar" style="height:78%" data-value="2.4K" data-label="Jul"></div>
+            <div class="chart-bar" style="height:58%" data-value="1.9K" data-label="Aug"></div>
+            <div class="chart-bar" style="height:88%" data-value="2.9K" data-label="Sep"></div>
+            <div class="chart-bar" style="height:100%" data-value="3.4K" data-label="Oct"></div>
+          </div>
+        </div>
+
+        <div class="admin-panel">
+          <div class="admin-panel-head">
+            <div>
+              <h3>Recent Activity</h3>
+              <p>Latest events across the platform</p>
+            </div>
+          </div>
+          <div id="recentActivity"></div>
+        </div>
+      </section>
+
+      <!-- Courses -->
+      <section class="admin-view" id="adminCourses">
+        <div class="admin-page-head">
+          <div>
+            <h1>Course Management</h1>
+            <p>Create, edit, publish and archive every course in the academy. Supports drip content, hybrid delivery, live sessions and certificates.</p>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-ghost btn-sm" onclick="adminGo('adminUpload')">⬆️ Upload</button>
+            <button class="btn btn-primary btn-sm" onclick="openCourseEditor(null)">➕ New Course</button>
+          </div>
+        </div>
+
+        <div class="admin-panel">
+          <div class="admin-panel-head">
+            <div>
+              <h3>All Courses</h3>
+              <p id="coursesTableCount">0 courses</p>
+            </div>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="admin-table" id="coursesTable">
+              <thead>
+                <tr>
+                  <th>Course</th>
+                  <th>Category</th>
+                  <th>Delivery</th>
+                  <th>Modules</th>
+                  <th>Price</th>
+                  <th>Status</th>
+                  <th style="text-align:right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="coursesTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Course Designer -->
+      <section class="admin-view" id="adminDesigner">
+        <div class="admin-page-head">
+          <div>
+            <h1 id="designerTitle">Create a New Course</h1>
+            <p>Design a course from scratch — modules, lessons, hybrid delivery type, drip schedule, pricing and certificate template.</p>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-ghost btn-sm" onclick="adminGo('adminCourses')">← Back to Courses</button>
+            <button class="btn btn-primary btn-sm" onclick="saveCourseFromDesigner()">💾 Save Course</button>
+          </div>
+        </div>
+
+        <div class="admin-panel">
+          <div class="admin-panel-head"><h3>Course Details</h3></div>
+          <div class="form-grid">
+            <div class="form-field full">
+              <label>Course Title <span class="req">*</span></label>
+              <input type="text" id="dTitle" placeholder="e.g. Foundations of Artificial Intelligence">
+            </div>
+            <div class="form-field full">
+              <label>Short Description <span class="req">*</span></label>
+              <textarea id="dDesc" placeholder="A one or two sentence summary that appears on the course card."></textarea>
+            </div>
+            <div class="form-field">
+              <label>Category</label>
+              <select id="dCategory">
+                <option value="critical">🧠 Critical Thinking</option>
+                <option value="communication">💬 Communication</option>
+                <option value="collaboration">🤝 Collaboration</option>
+                <option value="creativity">🎨 Creativity</option>
+                <option value="digital">💻 Digital Literacy</option>
+                <option value="life">🌱 Life & Career</option>
+                <option value="global">🌍 Global Citizenship</option>
+                <option value="health">💚 Health & Wellness</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>Level</label>
+              <select id="dLevel">
+                <option>Beginner</option>
+                <option>Intermediate</option>
+                <option>Advanced</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>Delivery Type (Hybrid LMS)</label>
+              <select id="dDelivery">
+                <option value="self">Self-paced (async)</option>
+                <option value="live">Live cohort (instructor-led)</option>
+                <option value="hybrid" selected>Hybrid (async + live)</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>Drip Content</label>
+              <select id="dDrip">
+                <option value="none">Release all at once</option>
+                <option value="weekly">Release one module per week</option>
+                <option value="daily">Release one lesson per day</option>
+                <option value="date">Scheduled release date</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>Price (ETB)</label>
+              <input type="number" id="dPrice" min="0" step="1" value="0" placeholder="0 for free">
+              <span class="hint">0 = free course. Paid courses go through Telebirr.</span>
+            </div>
+            <div class="form-field">
+              <label>Total Hours</label>
+              <input type="number" id="dHours" min="1" value="12">
+            </div>
+            <div class="form-field">
+              <label>Instructor</label>
+              <input type="text" id="dInstructor" value="Academy Faculty" placeholder="Name or team">
+            </div>
+            <div class="form-field">
+              <label>Certificate Name</label>
+              <input type="text" id="dCert" placeholder="Auto-generated if empty">
+            </div>
+            <div class="form-field full">
+              <label>Learning Outcomes</label>
+              <textarea id="dOutcomes" placeholder="One outcome per line.&#10;Explain how neural networks learn&#10;Train and evaluate a model&#10;Identify bias and ethical risks"></textarea>
+              <span class="hint">One outcome per line — these appear on the course detail modal.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-panel">
+          <div class="admin-panel-head">
+            <div>
+              <h3>Course Modules</h3>
+              <p>Build the curriculum module by module. Each module can contain lessons, live sessions and an assessment.</p>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="addModuleToDesigner()">➕ Add Module</button>
+          </div>
+          <div class="module-builder" id="moduleBuilder"></div>
+        </div>
+
+        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:24px">
+          <button class="btn btn-ghost" onclick="adminGo('adminCourses')">Cancel</button>
+          <button class="btn btn-primary" onclick="saveCourseFromDesigner()">💾 Save & Publish Course</button>
+        </div>
+      </section>
+
+      <!-- Upload -->
+      <section class="admin-view" id="adminUpload">
+        <div class="admin-page-head">
+          <div>
+            <h1>Upload Courses</h1>
+            <p>Import an existing course pack from JSON, CSV, Markdown or plain text. The system auto-detects structure and generates modules, lessons and quizzes.</p>
+          </div>
+        </div>
+
+        <div class="admin-panel">
+          <div class="admin-panel-head">
+            <div>
+              <h3>Drop a course file</h3>
+              <p>Supported: .json · .csv · .md · .txt</p>
+            </div>
+          </div>
+          <div class="dropzone" id="uploadDropzone">
+            <span class="dz-icon">⬆️</span>
+            <div class="dz-title">Click to upload, or drag a file here</div>
+            <div class="dz-meta">Course packs, syllabi, curriculum documents — any of them work</div>
+            <input type="file" id="uploadInput" accept=".json,.csv,.md,.markdown,.txt,application/json,text/csv,text/markdown,text/plain" style="display:none">
+          </div>
+        </div>
+
+        <div class="admin-panel">
+          <div class="admin-panel-head"><h3>Or paste course content</h3></div>
+          <div class="form-field full">
+            <label>Paste Markdown, JSON, CSV or plain text</label>
+            <textarea id="uploadPaste" style="min-height:220px;font-family:'JetBrains Mono',monospace;font-size:.82rem" placeholder="# Course Title&#10;&#10;## Module 1: Foundations&#10;- Topic one&#10;- Topic two&#10;&#10;## Module 2: Application&#10;- Topic three"></textarea>
+            <span class="hint">The first heading (or first non-empty line) becomes the course title. Each second-level heading becomes a module.</span>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+            <button class="btn btn-primary" onclick="importPastedCourse()">📥 Import Pasted Content</button>
+            <button class="btn btn-ghost" onclick="loadSampleUpload('md')">Load Markdown Sample</button>
+            <button class="btn btn-ghost" onclick="loadSampleUpload('json')">Load JSON Sample</button>
+            <button class="btn btn-ghost" onclick="loadSampleUpload('csv')">Load CSV Sample</button>
+          </div>
+        </div>
+
+        <div class="admin-panel">
+          <div class="admin-panel-head"><h3>Import from a URL</h3></div>
+          <div class="form-grid">
+            <div class="form-field full">
+              <label>Source URL</label>
+              <input type="url" id="uploadUrl" placeholder="https://example.com/syllabus">
+              <span class="hint">The system will fetch the page and extract headings as modules.</span>
+            </div>
+          </div>
+          <button class="btn btn-primary" style="margin-top:12px" onclick="importFromUrl()">🔗 Import from URL</button>
+        </div>
+      </section>
+
+      <!-- Students -->
+      <section class="admin-view" id="adminStudents">
+        <div class="admin-page-head">
+          <div>
+            <h1>Student Management</h1>
+            <p>View enrolled learners, track their progress, issue certificates and manage cohort membership.</p>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="addDemoStudent()">➕ Add Learner</button>
+        </div>
+
+        <div class="admin-panel">
+          <div class="admin-panel-head">
+            <div><h3>Enrolled Learners</h3><p id="studentsTableCount">0 learners</p></div>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="admin-table" id="studentsTable">
+              <thead>
+                <tr>
+                  <th>Learner</th>
+                  <th>Course</th>
+                  <th>Progress</th>
+                  <th>Last Active</th>
+                  <th>Status</th>
+                  <th style="text-align:right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="studentsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Live Sessions -->
+      <section class="admin-view" id="adminSchedule">
+        <div class="admin-page-head">
+          <div>
+            <h1>Live Sessions & Cohort Schedule</h1>
+            <p>Hybrid LMS features: schedule live workshops, office hours and cohort launches. Learners see sessions in their dashboard.</p>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="addDemoSession()">➕ Add Session</button>
+        </div>
+
+        <div class="admin-panel">
+          <div class="admin-panel-head"><h3>Upcoming Sessions</h3></div>
+          <div id="sessionsList"></div>
+        </div>
+      </section>
+
+      <!-- Discussions -->
+      <section class="admin-view" id="adminDiscussions">
+        <div class="admin-page-head">
+          <div>
+            <h1>Discussion Forum</h1>
+            <p>Moderate learner discussions, answer questions and pin useful threads across each course cohort.</p>
+          </div>
+        </div>
+
+        <div class="admin-panel">
+          <div class="admin-panel-head"><h3>Recent Threads</h3></div>
+          <div id="discussionsList"></div>
+        </div>
+      </section>
+
+      <!-- Gradebook -->
+      <section class="admin-view" id="adminGrades">
+        <div class="admin-page-head">
+          <div>
+            <h1>Gradebook</h1>
+            <p>Enter, review and export grades for quizzes, assignments and capstone projects. Grades contribute to final certificates.</p>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="showToast('📥 Grades exported to CSV (demo).','success')">⬇️ Export CSV</button>
+        </div>
+
+        <div class="admin-panel">
+          <div class="admin-panel-head"><h3>Learner Grades</h3></div>
+          <div style="overflow-x:auto">
+            <table class="admin-table grade-table" id="gradesTable">
+              <thead>
+                <tr>
+                  <th>Learner</th>
+                  <th>Quiz Avg</th>
+                  <th>Assignments</th>
+                  <th>Capstone</th>
+                  <th>Final</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="gradesTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Payments -->
+      <section class="admin-view" id="adminPayments">
+        <div class="admin-page-head">
+          <div>
+            <h1>Payments & Enrollments</h1>
+            <p>All Telebirr transactions, enrolment records and revenue reporting. Export receipts for accounting.</p>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="showToast('📥 Payment records exported (demo).','success')">⬇️ Export Ledger</button>
+        </div>
+
+        <div class="admin-kpis">
+          <div class="admin-kpi">
+            <div class="kpi-label">Total Revenue</div>
+            <div class="kpi-value" id="payTotal">ETB 0</div>
+            <div class="kpi-trend">All-time</div>
+          </div>
+          <div class="admin-kpi">
+            <div class="kpi-label">This Month</div>
+            <div class="kpi-value" id="payMonth">ETB 0</div>
+            <div class="kpi-trend">▲ 24%</div>
+          </div>
+          <div class="admin-kpi">
+            <div class="kpi-label">Transactions</div>
+            <div class="kpi-value" id="payCount">0</div>
+            <div class="kpi-trend">All-time</div>
+          </div>
+          <div class="admin-kpi">
+            <div class="kpi-label">Avg. Order</div>
+            <div class="kpi-value" id="payAvg">ETB 0</div>
+            <div class="kpi-trend">Per transaction</div>
+          </div>
+        </div>
+
+        <div class="admin-panel">
+          <div class="admin-panel-head"><h3>Telebirr Transactions</h3></div>
+          <div style="overflow-x:auto">
+            <table class="admin-table" id="paymentsTable">
+              <thead>
+                <tr>
+                  <th>Reference</th>
+                  <th>Learner</th>
+                  <th>Course</th>
+                  <th>Amount</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="paymentsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Analytics -->
+      <section class="admin-view" id="adminAnalytics">
+        <div class="admin-page-head">
+          <div>
+            <h1>Analytics</h1>
+            <p>Deep insights across courses, cohorts, retention and revenue.</p>
+          </div>
+        </div>
+
+        <div class="admin-panel">
+          <div class="admin-panel-head">
+            <div><h3>Course Enrollments (Top 5)</h3><p>By total learner count</p></div>
+          </div>
+          <div class="chart-bars" id="analyticsChart"></div>
+        </div>
+
+        <div class="admin-panel">
+          <div class="admin-panel-head"><h3>Completion Funnel</h3></div>
+          <div class="progress-list">
+            <div class="p-item">
+              <div class="p-top"><span>Enrolled</span><span>100%</span></div>
+              <div class="p-bar"><i data-w="100%"></i></div>
+            </div>
+            <div class="p-item">
+              <div class="p-top"><span>Started first module</span><span>82%</span></div>
+              <div class="p-bar"><i data-w="82%"></i></div>
+            </div>
+            <div class="p-item">
+              <div class="p-top"><span>Halfway through</span><span>61%</span></div>
+              <div class="p-bar"><i data-w="61%"></i></div>
+            </div>
+            <div class="p-item">
+              <div class="p-top"><span>Completed all modules</span><span>44%</span></div>
+              <div class="p-bar"><i data-w="44%"></i></div>
+            </div>
+            <div class="p-item">
+              <div class="p-top"><span>Earned certificate</span><span>38%</span></div>
+              <div class="p-bar"><i data-w="38%"></i></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Settings -->
+      <section class="admin-view" id="adminSettings">
+        <div class="admin-page-head">
+          <div>
+            <h1>Platform Settings</h1>
+            <p>Configure branding, payment gateways, certificate templates and LMS behaviour.</p>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="saveSettings()">💾 Save Settings</button>
+        </div>
+
+        <div class="admin-panel">
+          <div class="admin-panel-head"><h3>Academy Branding</h3></div>
+          <div class="form-grid">
+            <div class="form-field full">
+              <label>Academy Name</label>
+              <input type="text" id="sAcademyName" value="21st Century Skills Academy">
+            </div>
+            <div class="form-field full">
+              <label>Tagline</label>
+              <input type="text" id="sTagline" value="Learn. Practice. Apply. Certify.">
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-panel">
+          <div class="admin-panel-head"><h3>Payment Gateway</h3></div>
+          <div class="form-grid">
+            <div class="form-field">
+              <label>Telebirr Number</label>
+              <input type="text" id="sTelebirr" value="0917106325">
+            </div>
+            <div class="form-field">
+              <label>Account Name</label>
+              <input type="text" id="sAccountName" value="Mohammed Sultan Tura">
+            </div>
+            <div class="form-field">
+              <label>Currency</label>
+              <select id="sCurrency">
+                <option value="ETB" selected>ETB (Ethiopian Birr)</option>
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>Default Course Fee (ETB)</label>
+              <input type="number" id="sDefaultFee" value="50">
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-panel">
+          <div class="admin-panel-head"><h3>LMS Behaviour</h3></div>
+          <div class="form-grid">
+            <div class="form-field">
+              <label>Default Delivery Mode</label>
+              <select id="sDelivery">
+                <option value="hybrid" selected>Hybrid</option>
+                <option value="self">Self-paced</option>
+                <option value="live">Live cohort</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>Pass Mark (%)</label>
+              <input type="number" id="sPassMark" value="80" min="0" max="100">
+            </div>
+            <div class="form-field">
+              <label>Certificate Template</label>
+              <select id="sCertTemplate">
+                <option value="classic" selected>Classic Gold</option>
+                <option value="modern">Modern Gradient</option>
+                <option value="minimal">Minimalist</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>Allow Self-Enrolment</label>
+              <select id="sSelfEnrol">
+                <option value="yes" selected>Yes</option>
+                <option value="no">No (admin only)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-panel">
+          <div class="admin-panel-head"><h3>Danger Zone</h3></div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+            <button class="btn btn-danger btn-sm" onclick="resetAllData()">🗑 Reset All Demo Data</button>
+            <span style="font-size:.82rem;color:var(--muted)">Clears courses, students, sessions and payments stored in this browser.</span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================================
+   1. STATE & PERSISTENCE
+   ============================================================================ */
+const STORAGE_KEY = 't21_academy_admin_v1';
+
+const DEFAULT_STATE = {
+  courses: [],       // custom courses (built-in list is separate)
+  students: [],
+  sessions: [],
+  discussions: [],
+  payments: [],
+  settings: {
+    academyName: '21st Century Skills Academy',
+    tagline: 'Learn. Practice. Apply. Certify.',
+    telebirr: '0917106325',
+    accountName: 'Mohammed Sultan Tura',
+    currency: 'ETB',
+    defaultFee: 50,
+    delivery: 'hybrid',
+    passMark: 80,
+    certTemplate: 'classic',
+    selfEnrol: 'yes'
+  },
+  editingCourseId: null
+};
+
+let state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const saved = JSON.parse(raw);
+      state = Object.assign({}, DEFAULT_STATE, saved);
+      state.settings = Object.assign({}, DEFAULT_STATE.settings, saved.settings || {});
+    }
+  }catch(e){ console.warn('Load error', e); }
+  seedDemoData();
+}
+
+function saveState(){
+  try{
+    // Strip editing-course ID (transient)
+    const toSave = Object.assign({}, state);
+    delete toSave.editingCourseId;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+  }catch(e){ console.warn('Save error', e); }
+}
+
+function seedDemoData(){
+  if(!state.students.length){
+    state.students = [
+      { id:'s1', name:'Amara Bekele',  email:'amara@school.edu.et',  course:'Logic & Critical Reasoning',   progress:68, lastActive:'2 hours ago', status:'active' },
+      { id:'s2', name:'Tesfaye Ayele', email:'tesfaye@school.edu.et',course:'AI & ML Foundations',         progress:92, lastActive:'1 day ago',   status:'active' },
+      { id:'s3', name:'Hana Girma',    email:'hana@school.edu.et',   course:'Public Speaking',             progress:44, lastActive:'3 days ago',  status:'active' },
+      { id:'s4', name:'Yonas Tadesse', email:'yonas@school.edu.et',  course:'Python for Beginners',        progress:100,lastActive:'1 week ago',  status:'completed' },
+      { id:'s5', name:'Selam Alemu',   email:'selam@school.edu.et',  course:'Design Thinking Sprint',      progress:17, lastActive:'5 hours ago', status:'active' }
+    ];
+  }
+  if(!state.sessions.length){
+    state.sessions = [
+      { id:'se1', date:'12', month:'Nov', title:'AI Strategy for School Leaders — Live Workshop', time:'14:00 – 15:30 EAT', type:'live',   course:'Leading a School in the AI Era' },
+      { id:'se2', date:'15', month:'Nov', title:'Design Thinking Sprint — Cohort Kickoff',        time:'10:00 – 12:00 EAT', type:'hybrid', course:'Design Thinking Sprint' },
+      { id:'se3', date:'20', month:'Nov', title:'Python Office Hours — Q&A with Faculty',         time:'16:00 – 17:00 EAT', type:'live',   course:'Python for Beginners' }
+    ];
+  }
+  if(!state.discussions.length){
+    state.discussions = [
+      { id:'d1', author:'Amara Bekele', initials:'AB', time:'2 hours ago',
+        text:'How do you handle student AI use in assessment redesign? I keep going back and forth between banning and embracing.',
+        replies:[
+          { author:'Dr. Hana Girma', text:'The key is to redesign the task rather than police the tool. Process-based assessment + oral defence works well.' }
+        ],
+        course:'Leading a School in the AI Era' },
+      { id:'d2', author:'Yonas Tadesse', initials:'YT', time:'1 day ago',
+        text:'Just finished the Python for Beginners capstone! The browser labs made it so much easier to iterate. Thanks faculty.',
+        replies:[], course:'Python for Beginners' },
+      { id:'d3', author:'Selam Alemu', initials:'SA', time:'3 days ago',
+        text:'Anybody else using the design sprint method in their actual workplace? Curious how it plays out with real stakeholders.',
+        replies:[], course:'Design Thinking Sprint' }
+    ];
+  }
+  if(!state.payments.length){
+    state.payments = [
+      { ref:'TR-8A23F91K', learner:'Amara Bekele',   course:'Leading a School in the AI Era', amount:50,  date:'2025-10-28', status:'paid' },
+      { ref:'TR-8A23F92L', learner:'Tesfaye Ayele',  course:'AI & ML Foundations',            amount:120, date:'2025-10-27', status:'paid' },
+      { ref:'TR-8A23F93M', learner:'Hana Girma',     course:'Public Speaking & Persuasion',   amount:80,  date:'2025-10-25', status:'paid' },
+      { ref:'TR-8A23F94N', learner:'Selam Alemu',    course:'Design Thinking Sprint',         amount:100, date:'2025-10-22', status:'paid' },
+      { ref:'TR-8A23F95P', learner:'Yonas Tadesse',  course:'Python for Absolute Beginners',  amount:150, date:'2025-10-20', status:'paid' }
+    ];
+  }
+}
+
+/* ============================================================================
+   2. HELPERS
+   ============================================================================ */
+const uid = (p='id') => p + '-' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+const esc = s => String(s == null ? '' : s)
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+  .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+function showToast(msg, kind=''){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + kind;
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+/* ============================================================================
+   3. PUBLIC DATA (Landing page data — untouched)
+   ============================================================================ */
+const SKILLS = [
+  { id:'critical', icon:'🧠', name:'Critical Thinking', level:'Core Competency', color:'#6366f1',
+    desc:'Logic, problem-solving, research methods and data literacy for sound decision-making.',
+    tags:['Logic','Research','Analysis','Data Literacy'],
+    outcomes:['Evaluate sources and identify bias','Build structured arguments','Apply statistical reasoning','Design experiments and interpret results'] },
+  { id:'communication', icon:'💬', name:'Communication', level:'Core Competency', color:'#8b5cf6',
+    desc:'Writing, public speaking, digital storytelling and cross-cultural communication.',
+    tags:['Writing','Public Speaking','Storytelling','Persuasion'],
+    outcomes:['Write clear, persuasive professional prose','Deliver confident presentations','Adapt messaging across cultures','Craft narratives with data'] },
+  { id:'collaboration', icon:'🤝', name:'Collaboration', level:'Core Competency', color:'#06b6d4',
+    desc:'Team dynamics, project management, virtual teamwork and conflict resolution.',
+    tags:['Teamwork','Agile','Negotiation','Leadership'],
+    outcomes:['Run effective distributed meetings','Manage scope, time and stakeholders','Resolve conflict constructively','Lead without formal authority'] },
+  { id:'creativity', icon:'🎨', name:'Creativity', level:'Core Competency', color:'#ec4899',
+    desc:'Design thinking, innovation labs, creative writing and arts integration.',
+    tags:['Design Thinking','Ideation','Prototyping','Storytelling'],
+    outcomes:['Run end-to-end design sprints','Generate and filter ideas rapidly','Build low-fidelity prototypes','Ship a public creative portfolio'] },
+  { id:'digital', icon:'💻', name:'Digital Literacy', level:'Essential Skill', color:'#10b981',
+    desc:'Coding, AI fundamentals, cybersecurity and digital ethics.',
+    tags:['Coding','AI','Cybersecurity','Digital Ethics'],
+    outcomes:['Write working code in Python and SQL','Understand how LLMs actually work','Recognise and defend against cyber threats','Apply ethical frameworks to technology'] },
+  { id:'life', icon:'🌱', name:'Life & Career', level:'Essential Skill', color:'#f59e0b',
+    desc:'Financial literacy, emotional intelligence, adaptability and entrepreneurship.',
+    tags:['Finance','EQ','Adaptability','Entrepreneurship'],
+    outcomes:['Build a personal financial plan','Regulate emotion under pressure','Navigate career transitions','Validate a business idea cheaply'] },
+  { id:'global', icon:'🌍', name:'Global Citizenship', level:'Growth Skill', color:'#0ea5e9',
+    desc:'Sustainability, civic engagement and global awareness.',
+    tags:['Sustainability','Civics','Global Awareness'],
+    outcomes:['Measure your carbon and social footprint','Engage constructively in civic processes','Understand global systems and trade','Lead sustainability initiatives'] },
+  { id:'health', icon:'💚', name:'Health & Wellness', level:'Growth Skill', color:'#22c55e',
+    desc:'Mental health, physical wellbeing and sustainable work-life balance.',
+    tags:['Mental Health','Fitness','Sleep','Focus'],
+    outcomes:['Build a sustainable daily routine','Apply evidence-based stress management','Optimise sleep and recovery','Design a focus-friendly workspace'] }
+];
+
+const DOMAINS = [
+  { id:'all', label:'All Courses' },
+  { id:'critical', label:'🧠 Critical Thinking' },
+  { id:'communication', label:'💬 Communication' },
+  { id:'collaboration', label:'🤝 Collaboration' },
+  { id:'creativity', label:'🎨 Creativity' },
+  { id:'digital', label:'💻 Digital' },
+  { id:'life', label:'🌱 Life & Career' },
+  { id:'global', label:'🌍 Global' },
+  { id:'health', label:'💚 Wellness' }
+];
+
+const BASE_COURSES = [
+  { id:1, title:'Logic & Critical Reasoning', domain:'critical', level:'Beginner', hours:12, rating:4.8, learners:'128K', icon:'🧠', color:'#6366f1',
+    desc:'Master formal and informal logic, spot fallacies, and build arguments that hold up under scrutiny.',
+    outcomes:['Identify 20+ logical fallacies instantly','Construct valid deductive arguments','Evaluate statistical claims','Write a rigorous analytical essay'] },
+  { id:2, title:'Data Literacy for Decisions', domain:'critical', level:'Intermediate', hours:18, rating:4.9, learners:'94K', icon:'📊', color:'#6366f1',
+    desc:'Read, question and communicate with data — without becoming a statistician.',
+    outcomes:['Interpret charts and dashboards critically','Detect misleading visualisations','Run basic significance tests','Present data-driven recommendations'] },
+  { id:3, title:'Public Speaking & Persuasion', domain:'communication', level:'Beginner', hours:10, rating:4.7, learners:'210K', icon:'🎤', color:'#8b5cf6',
+    desc:'Overcome stage fright and deliver talks that move people to action.',
+    outcomes:['Structure a talk in under 10 minutes','Control nerves with breathing techniques','Use story to make ideas stick','Handle hostile Q&A confidently'] },
+  { id:4, title:'Writing for Impact', domain:'communication', level:'Beginner', hours:8, rating:4.8, learners:'176K', icon:'✍️', color:'#8b5cf6',
+    desc:'Clear, concise, persuasive writing for email, reports, proposals and the web.',
+    outcomes:['Cut word count by 40% without losing meaning','Write emails people actually reply to','Structure long-form reports','Adapt tone for any audience'] },
+  { id:5, title:'Leading High-Performing Teams', domain:'collaboration', level:'Intermediate', hours:16, rating:4.9, learners:'88K', icon:'🤝', color:'#06b6d4',
+    desc:'Build trust, run effective meetings, and turn a group of individuals into a team.',
+    outcomes:['Run a meeting that ends on time with decisions made','Give feedback that improves performance','Diagnose team dysfunction','Design a team charter'] },
+  { id:6, title:'Agile Project Management', domain:'collaboration', level:'Intermediate', hours:20, rating:4.7, learners:'142K', icon:'📋', color:'#06b6d4',
+    desc:'Plan, execute and ship projects using Scrum and Kanban in real-world conditions.',
+    outcomes:['Write user stories and acceptance criteria','Facilitate sprint planning and retros','Track flow with Kanban metrics','Manage stakeholder expectations'] },
+  { id:7, title:'Design Thinking Sprint', domain:'creativity', level:'Beginner', hours:14, rating:4.9, learners:'156K', icon:'💡', color:'#ec4899',
+    desc:'Run a full five-day design sprint from problem to tested prototype.',
+    outcomes:['Frame a problem worth solving','Run rapid ideation sessions','Build a clickable prototype in a day','Test with real users and iterate'] },
+  { id:8, title:'Creative Portfolio Studio', domain:'creativity', level:'Intermediate', hours:24, rating:4.8, learners:'67K', icon:'🎨', color:'#ec4899',
+    desc:'Produce, curate and publish a portfolio that gets you hired or funded.',
+    outcomes:['Select and sequence your best work','Write case studies that sell','Design a personal brand system','Publish and promote your portfolio'] },
+  { id:9, title:'Python for Absolute Beginners', domain:'digital', level:'Beginner', hours:22, rating:4.9, learners:'480K', icon:'🐍', color:'#10b981',
+    desc:'Go from zero to writing real programs with hands-on browser labs.',
+    outcomes:['Write functions, loops and conditionals','Work with files and APIs','Debug your own code','Ship a small automation project'] },
+  { id:10, title:'AI & Machine Learning Foundations', domain:'digital', level:'Intermediate', hours:28, rating:4.8, learners:'203K', icon:'🤖', color:'#10b981',
+    desc:'Understand how modern AI works and how to apply it responsibly.',
+    outcomes:['Explain how neural networks learn','Train and evaluate a model','Use pre-trained models via API','Identify bias and ethical risks'] },
+  { id:11, title:'Cybersecurity Essentials', domain:'digital', level:'Beginner', hours:16, rating:4.7, learners:'119K', icon:'🔐', color:'#10b981',
+    desc:'Protect yourself, your data and your organisation from modern threats.',
+    outcomes:['Recognise phishing and social engineering','Manage passwords and 2FA properly','Understand encryption basics','Respond to a security incident'] },
+  { id:12, title:'Personal Finance Mastery', domain:'life', level:'Beginner', hours:10, rating:4.8, learners:'265K', icon:'💰', color:'#f59e0b',
+    desc:'Budget, save, invest and plan — with confidence and without jargon.',
+    outcomes:['Build a zero-based budget','Understand compound interest','Evaluate investment options','Create a 5-year financial plan'] },
+  { id:13, title:'Emotional Intelligence at Work', domain:'life', level:'Beginner', hours:9, rating:4.9, learners:'187K', icon:'🧘', color:'#f59e0b',
+    desc:'Recognise, understand and manage emotions — yours and other people\'s.',
+    outcomes:['Name and regulate your emotions','Read non-verbal cues accurately','Respond rather than react','Build psychological safety'] },
+  { id:14, title:'Entrepreneurship: Idea to Launch', domain:'life', level:'Intermediate', hours:26, rating:4.8, learners:'98K', icon:'🚀', color:'#f59e0b',
+    desc:'Validate, build and launch a venture without wasting years or capital.',
+    outcomes:['Run customer discovery interviews','Build a minimum viable product','Price and position your offer','Acquire your first 100 customers'] },
+  { id:15, title:'Climate & Sustainability Literacy', domain:'global', level:'Beginner', hours:12, rating:4.7, learners:'74K', icon:'🌍', color:'#0ea5e9',
+    desc:'Understand the climate crisis and what individuals and organisations can do.',
+    outcomes:['Explain the science of climate change','Measure a personal carbon footprint','Evaluate corporate sustainability claims','Design a reduction plan'] },
+  { id:16, title:'Mindfulness & Focus', domain:'health', level:'Beginner', hours:6, rating:4.9, learners:'312K', icon:'💚', color:'#22c55e',
+    desc:'Train attention, reduce stress and build a sustainable daily practice.',
+    outcomes:['Practice 3 evidence-based meditation techniques','Reduce reactive stress responses','Design a distraction-free workday','Improve sleep quality'] }
+];
+
+/* ============================================================================
+   4. LANDING PAGE RENDER
+   ============================================================================ */
+const skillsWrap = document.getElementById('skillsWrap');
+skillsWrap.innerHTML = SKILLS.map(s => `
+  <article class="skill reveal" data-skill="${s.id}" style="--c:${s.color}">
+    <div class="skill-top">
+      <div class="skill-ico" style="background:${s.color}22;border:1px solid ${s.color}44">${s.icon}</div>
+      <div>
+        <h3>${esc(s.name)}</h3>
+        <span class="lvl">${esc(s.level)}</span>
+      </div>
+    </div>
+    <p>${esc(s.desc)}</p>
+    <div class="chips">${s.tags.map(t => `<span class="chip">${esc(t)}</span>`).join('')}</div>
+    <div class="skill-detail">
+      <ul>${s.outcomes.map(o => `<li>${esc(o)}</li>`).join('')}</ul>
+    </div>
+  </article>
+`).join('');
+
+skillsWrap.addEventListener('click', e => {
+  const card = e.target.closest('.skill');
+  if(!card) return;
+  const wasActive = card.classList.contains('active');
+  skillsWrap.querySelectorAll('.skill').forEach(c => c.classList.remove('active'));
+  if(!wasActive) card.classList.add('active');
+});
+
+const filtersEl = document.getElementById('filters');
+const gridEl = document.getElementById('courseGrid');
+const searchEl = document.getElementById('searchInput');
+let activeDomain = 'all';
+let query = '';
+
+filtersEl.innerHTML = DOMAINS.map(d =>
+  `<button class="filter-btn ${d.id === 'all' ? 'active' : ''}" data-domain="${d.id}">${d.label}</button>`
+).join('');
+
+function domainMeta(id){
+  return SKILLS.find(s => s.id === id) || { name:'General', color:'#6366f1', icon:'📘' };
+}
+
+function getUserCourses(){
+  // Convert admin-created courses into the same shape used by the landing grid
+  return state.courses.map(c => ({
+    id: c.id,
+    title: c.title,
+    domain: c.category || 'digital',
+    level: c.level || 'Beginner',
+    hours: c.hours || 12,
+    rating: c.rating || 4.8,
+    learners: c.learners || '0',
+    icon: c.icon || domainMeta(c.category || 'digital').icon,
+    color: c.color || domainMeta(c.category || 'digital').color,
+    desc: c.desc,
+    outcomes: c.outcomes || [],
+    isUserCourse: true
+  }));
+}
+
+function renderCourses(){
+  const q = query.trim().toLowerCase();
+  const allCourses = [...BASE_COURSES, ...getUserCourses()];
+
+  const list = allCourses.filter(c => {
+    const matchDomain = activeDomain === 'all' || c.domain === activeDomain;
+    const matchQuery = !q ||
+      c.title.toLowerCase().includes(q) ||
+      c.desc.toLowerCase().includes(q) ||
+      domainMeta(c.domain).name.toLowerCase().includes(q);
+    return matchDomain && matchQuery;
+  });
+
+  if(!list.length){
+    gridEl.innerHTML = `<div class="no-results"><span>🔍</span>No courses match your search. Try a different keyword or filter.</div>`;
+    return;
+  }
+
+  gridEl.innerHTML = list.map((c, i) => {
+    const meta = domainMeta(c.domain);
+    return `
+      <article class="card course" data-id="${c.id}" style="animation-delay:${i * 45}ms">
+        <div class="course-banner" style="background:linear-gradient(135deg,${c.color}33,${c.color}11)">
+          ${c.icon}
+          <span class="course-level">${esc(c.level)}</span>
+        </div>
+        <div class="course-body">
+          <div class="course-domain" style="color:${c.color}">${esc(meta.name)}</div>
+          <h3>${esc(c.title)}</h3>
+          <p class="desc">${esc(c.desc)}</p>
+          <div class="course-meta">
+            <span class="star">★</span> ${c.rating}
+            <span>⏱ ${c.hours}h</span>
+            <span>👥 ${esc(c.learners)}</span>
+            <span class="right">View →</span>
+          </div>
+        </div>
+      </article>
+    `;
+  }).join('');
+}
+
+filtersEl.addEventListener('click', e => {
+  const btn = e.target.closest('.filter-btn');
+  if(!btn) return;
+  filtersEl.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeDomain = btn.dataset.domain;
+  renderCourses();
+});
+
+searchEl.addEventListener('input', e => {
+  query = e.target.value;
+  renderCourses();
+});
+
+renderCourses();
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+const modal = document.getElementById('modal');
+const modalHead = document.getElementById('modalHead');
+
+gridEl.addEventListener('click', e => {
+  const card = e.target.closest('.course');
+  if(!card) return;
+  const allCourses = [...BASE_COURSES, ...getUserCourses()];
+  const course = allCourses.find(c => String(c.id) === String(card.dataset.id));
+  if(!course) return;
+
+  const meta = domainMeta(course.domain);
+
+  modalHead.style.background = `linear-gradient(135deg,${course.color}44,${course.color}11)`;
+  document.getElementById('modalIcon').textContent = course.icon;
+  document.getElementById('modalDomain').textContent = meta.name;
+  document.getElementById('modalDomain').style.color = course.color;
+  document.getElementById('modalTitle').textContent = course.title;
+  document.getElementById('modalDesc').textContent = course.desc;
+  document.getElementById('modalLevel').textContent = course.level;
+  document.getElementById('modalHours').textContent = course.hours + 'h';
+  document.getElementById('modalRating').textContent = '★ ' + course.rating;
+  document.getElementById('modalOutcomes').innerHTML =
+    (course.outcomes.length ? course.outcomes : ['Outcomes will be confirmed on enrolment'])
+      .map(o => `<li>${esc(o)}</li>`).join('');
+
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+});
+
+function closeModal(){
+  modal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('modalClose').addEventListener('click', closeModal);
+modal.addEventListener('click', e => { if(e.target === modal) closeModal(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModal(); });
+
+/* ============================================================
+   THEME / NAV / REVEAL / COUNTERS
+   ============================================================ */
+const themeBtn = document.getElementById('themeBtn');
+const root = document.documentElement;
+const savedTheme = (() => { try { return localStorage.getItem('t21-theme'); } catch { return null; } })();
+if(savedTheme) root.setAttribute('data-theme', savedTheme);
+themeBtn.textContent = root.getAttribute('data-theme') === 'light' ? '☀️' : '🌙';
+
+themeBtn.addEventListener('click', () => {
+  const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+  root.setAttribute('data-theme', next);
+  themeBtn.textContent = next === 'light' ? '☀️' : '🌙';
+  try { localStorage.setItem('t21-theme', next); } catch {}
+});
+
+const nav = document.getElementById('nav');
+const burger = document.getElementById('burger');
+const navLinks = document.getElementById('navLinks');
+
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 24);
+}, { passive:true });
+
+burger.addEventListener('click', () => {
+  burger.classList.toggle('open');
+  navLinks.classList.toggle('open');
+});
+
+navLinks.addEventListener('click', e => {
+  if(e.target.tagName === 'A'){
+    burger.classList.remove('open');
+    navLinks.classList.remove('open');
+  }
+});
+
+const sections = [...document.querySelectorAll('section[id]')];
+const linkMap = new Map([...navLinks.querySelectorAll('a')].map(a => [a.getAttribute('href').slice(1), a]));
+
+const navObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      linkMap.forEach(a => a.classList.remove('active'));
+      const link = linkMap.get(entry.target.id);
+      if(link) link.classList.add('active');
+    }
+  });
+}, { rootMargin:'-45% 0px -50% 0px' });
+
+sections.forEach(s => navObserver.observe(s));
+
+const revealObserver = new IntersectionObserver((entries, obs) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      entry.target.classList.add('in');
+      obs.unobserve(entry.target);
+    }
+  });
+}, { threshold:.12, rootMargin:'0px 0px -50px 0px' });
+
+document.querySelectorAll('.reveal').forEach((el, i) => {
+  el.style.transitionDelay = (i % 5) * 70 + 'ms';
+  revealObserver.observe(el);
+});
+
+function animateCount(el){
+  const target = Number(el.dataset.count);
+  const suffix = el.dataset.suffix || '';
+  const duration = 1800;
+  const start = performance.now();
+
+  function tick(now){
+    const p = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - p, 3);
+    const value = Math.floor(target * eased);
+    let display;
+    if(target >= 1_000_000) display = (value / 1_000_000).toFixed(value >= 1_000_000 ? 0 : 1) + 'M';
+    else if(target >= 1_000) display = Math.round(value / 1000) + 'K';
+    else display = value.toLocaleString();
+    el.textContent = display + suffix;
+    if(p < 1) requestAnimationFrame(tick);
+    else {
+      if(target >= 1_000_000) el.textContent = (target / 1_000_000) + 'M' + suffix;
+      else if(target >= 1_000) el.textContent = Math.round(target / 1000) + 'K' + suffix;
+      else el.textContent = target.toLocaleString() + suffix;
+    }
+  }
+  requestAnimationFrame(tick);
+}
+
+const counterObserver = new IntersectionObserver((entries, obs) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      animateCount(entry.target);
+      obs.unobserve(entry.target);
+    }
+  });
+}, { threshold:.5 });
+
+document.querySelectorAll('[data-count]').forEach(el => counterObserver.observe(el));
+
+const barObserver = new IntersectionObserver((entries, obs) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      const bars = entry.target.querySelectorAll('[data-w]');
+      bars.forEach((bar, i) => {
+        setTimeout(() => { bar.style.width = bar.dataset.w; }, i * 130);
+      });
+      obs.unobserve(entry.target);
+    }
+  });
+}, { threshold:.25 });
+
+document.querySelectorAll('.hero-card, .dash').forEach(el => barObserver.observe(el));
+
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const id = a.getAttribute('href');
+    if(id === '#') return;
+    const target = document.querySelector(id);
+    if(!target) return;
+    e.preventDefault();
+    const y = target.getBoundingClientRect().top + window.scrollY - 84;
+    window.scrollTo({ top:y, behavior:'smooth' });
+  });
+});
+
+/* ============================================================================
+   5. ADMIN PANEL
+   ============================================================================ */
+const adminOverlay = document.getElementById('adminOverlay');
+
+function adminOpen(){
+  adminOverlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  renderAdmin();
+}
+function adminClose(){
+  adminOverlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('adminOpenBtn').addEventListener('click', adminOpen);
+document.getElementById('adminOpenBtnHero').addEventListener('click', adminOpen);
+document.getElementById('adminOpenFooter').addEventListener('click', e => { e.preventDefault(); adminOpen(); });
+document.getElementById('adminCloseBtn').addEventListener('click', adminClose);
+
+// Admin navigation
+document.querySelectorAll('.admin-nav-item').forEach(item => {
+  item.addEventListener('click', () => adminGo(item.dataset.view));
+});
+
+function adminGo(viewId){
+  document.querySelectorAll('.admin-nav-item').forEach(i => i.classList.toggle('active', i.dataset.view === viewId));
+  document.querySelectorAll('.admin-view').forEach(v => v.classList.toggle('active', v.id === viewId));
+  renderAdmin();
+  // Scroll admin main to top
+  document.querySelector('.admin-main').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function renderAdmin(){
+  renderCoursesTable();
+  renderStudentsTable();
+  renderSessionsList();
+  renderDiscussionsList();
+  renderGradesTable();
+  renderPaymentsTable();
+  renderAnalyticsChart();
+  renderRecentActivity();
+  updateAdminKPIs();
+}
+
+/* ----- KPIs ----- */
+function updateAdminKPIs(){
+  const totalCourses = state.courses.length + BASE_COURSES.length;
+  const totalStudents = state.students.length;
+  const revenue = state.payments.reduce((sum, p) => sum + (p.amount || 0), 0);
+
+  document.getElementById('kpiCourses').textContent = totalCourses.toLocaleString();
+  document.getElementById('kpiStudents').textContent = totalStudents.toLocaleString();
+  document.getElementById('kpiRevenue').textContent = 'ETB ' + revenue.toLocaleString();
+  document.getElementById('coursesCountBadge').textContent = state.courses.length;
+  document.getElementById('studentsCountBadge').textContent = state.students.length;
+}
+
+/* ----- Courses table ----- */
+function renderCoursesTable(){
+  const tbody = document.getElementById('coursesTableBody');
+  const allCourses = [
+    ...BASE_COURSES.map(c => ({
+      id: c.id, title: c.title, category: c.domain, delivery:'Self-paced',
+      modules: '—', price: 'Free', status:'published', builtin:true,
+      icon: c.icon, desc: c.desc
+    })),
+    ...state.courses.map(c => ({
+      id: c.id, title: c.title, category: c.category, delivery: c.delivery,
+      modules: (c.modules || []).length, price: c.price > 0 ? 'ETB ' + c.price : 'Free',
+      status: c.status || 'published', builtin:false, icon: c.icon || '📘',
+      desc: c.desc
+    }))
+  ];
+
+  document.getElementById('coursesTableCount').textContent = allCourses.length + ' courses';
+
+  if(!allCourses.length){
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted)">No courses yet. Click "New Course" to create one.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = allCourses.map(c => {
+    const meta = domainMeta(c.category);
+    return `
+      <tr>
+        <td>
+          <div class="tbl-cell-title">
+            <div class="tbl-icon" style="background:${meta.color}22;border:1px solid ${meta.color}44">${c.icon}</div>
+            <div>
+              <b>${esc(c.title)}</b>
+              <small>${esc(c.desc || '').slice(0,60)}${(c.desc||'').length > 60 ? '…' : ''}</small>
+            </div>
+          </div>
+        </td>
+        <td><span class="chip">${esc(meta.name)}</span></td>
+        <td><span class="chip">${esc(c.delivery)}</span></td>
+        <td>${c.modules}</td>
+        <td><strong>${esc(c.price)}</strong></td>
+        <td><span class="status-pill ${c.status}">${c.status}</span></td>
+        <td>
+          <div class="row-actions">
+            ${c.builtin ? `
+              <button class="btn btn-ghost btn-sm" onclick="showToast('Built-in courses are locked. Create a copy to edit.','')">🔒 Locked</button>
+            ` : `
+              <button class="btn btn-ghost btn-sm" onclick="openCourseEditor('${c.id}')">✏️ Edit</button>
+              <button class="btn btn-ghost btn-sm" onclick="duplicateCourse('${c.id}')">📋 Duplicate</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteCourse('${c.id}')">🗑</button>
+            `}
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+/* ----- Students table ----- */
+function renderStudentsTable(){
+  const tbody = document.getElementById('studentsTableBody');
+  document.getElementById('studentsTableCount').textContent = state.students.length + ' learners';
+
+  if(!state.students.length){
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--muted)">No learners enrolled yet.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = state.students.map(s => {
+    const initials = s.name.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase();
+    const statusPill = s.status === 'completed'
+      ? '<span class="status-pill published">Completed</span>'
+      : s.status === 'inactive'
+        ? '<span class="status-pill archived">Inactive</span>'
+        : '<span class="status-pill draft">Active</span>';
+    return `
+      <tr>
+        <td>
+          <div class="tbl-cell-title">
+            <div class="discussion-avatar" style="width:38px;height:38px;font-size:.85rem">${initials}</div>
+            <div>
+              <b>${esc(s.name)}</b>
+              <small>${esc(s.email)}</small>
+            </div>
+          </div>
+        </td>
+        <td>${esc(s.course)}</td>
+        <td>
+          <div style="display:flex;align-items:center;gap:10px;min-width:140px">
+            <div class="p-bar" style="flex:1"><i style="width:${s.progress}%"></i></div>
+            <span style="font-size:.78rem;font-weight:800;color:var(--muted)">${s.progress}%</span>
+          </div>
+        </td>
+        <td style="font-size:.8rem;color:var(--muted)">${esc(s.lastActive)}</td>
+        <td>${statusPill}</td>
+        <td>
+          <div class="row-actions">
+            <button class="btn btn-ghost btn-sm" onclick="showToast('Profile view coming soon','')">👤</button>
+            <button class="btn btn-ghost btn-sm" onclick="showToast('Certificate issued ✓','success')">🏅</button>
+            <button class="btn btn-danger btn-sm" onclick="removeStudent('${s.id}')">🗑</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+/* ----- Sessions ----- */
+function renderSessionsList(){
+  const list = document.getElementById('sessionsList');
+  if(!state.sessions.length){
+    list.innerHTML = `<div class="empty-state"><span class="es-icon">📅</span><h3>No sessions scheduled</h3><p>Add a live workshop, office hour or cohort kickoff.</p></div>`;
+    return;
+  }
+  list.innerHTML = state.sessions.map(s => `
+    <div class="session-row">
+      <div class="session-date">
+        <b>${esc(s.date)}</b>
+        <small>${esc(s.month)}</small>
+      </div>
+      <div class="session-info">
+        <b>${esc(s.title)}</b>
+        <small>${esc(s.time)} · ${esc(s.course)}</small>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span class="session-type ${s.type}">${s.type}</span>
+        <button class="btn btn-danger btn-sm" onclick="removeSession('${s.id}')">🗑</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ----- Discussions ----- */
+function renderDiscussionsList(){
+  const list = document.getElementById('discussionsList');
+  if(!state.discussions.length){
+    list.innerHTML = `<div class="empty-state"><span class="es-icon">💬</span><h3>No discussions yet</h3><p>Learner conversations will appear here.</p></div>`;
+    return;
+  }
+  list.innerHTML = state.discussions.map(d => `
+    <div class="discussion-thread">
+      <div class="discussion-thread-head">
+        <div class="discussion-avatar">${esc(d.initials)}</div>
+        <div style="flex:1">
+          <b>${esc(d.author)}</b>
+          <small style="display:block">${esc(d.time)} · ${esc(d.course)}</small>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="showToast('Thread pinned ✓','success')">📌</button>
+      </div>
+      <div class="discussion-body">${esc(d.text)}</div>
+      ${d.replies && d.replies.length ? d.replies.map(r => `
+        <div class="discussion-reply"><strong>${esc(r.author)}:</strong> ${esc(r.text)}</div>
+      `).join('') : ''}
+    </div>
+  `).join('');
+}
+
+/* ----- Grades ----- */
+function renderGradesTable(){
+  const tbody = document.getElementById('gradesTableBody');
+  if(!state.students.length){
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--muted)">No grades yet.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = state.students.map(s => {
+    const quizAvg  = Math.min(100, s.progress + 8);
+    const assign   = Math.min(100, s.progress + 4);
+    const capstone = Math.min(100, Math.max(0, s.progress - 4));
+    const final    = Math.round((quizAvg + assign + capstone) / 3);
+    const status   = final >= state.settings.passMark
+      ? '<span class="status-pill published">Pass</span>'
+      : '<span class="status-pill draft">In Progress</span>';
+    return `
+      <tr>
+        <td><strong>${esc(s.name)}</strong><br><small style="color:var(--muted);font-size:.72rem">${esc(s.course)}</small></td>
+        <td><input type="number" min="0" max="100" value="${quizAvg}"></td>
+        <td><input type="number" min="0" max="100" value="${assign}"></td>
+        <td><input type="number" min="0" max="100" value="${capstone}"></td>
+        <td><strong style="color:var(--accent)">${final}%</strong></td>
+        <td>${status}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+/* ----- Payments ----- */
+function renderPaymentsTable(){
+  const tbody = document.getElementById('paymentsTableBody');
+  const total = state.payments.reduce((sum, p) => sum + (p.amount || 0), 0);
+  const count = state.payments.length;
+  const avg   = count ? Math.round(total / count) : 0;
+  const month = total; // demo — assume all current month
+
+  document.getElementById('payTotal').textContent = 'ETB ' + total.toLocaleString();
+  document.getElementById('payMonth').textContent = 'ETB ' + month.toLocaleString();
+  document.getElementById('payCount').textContent = count;
+  document.getElementById('payAvg').textContent = 'ETB ' + avg.toLocaleString();
+
+  if(!state.payments.length){
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--muted)">No payments recorded.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = state.payments.map(p => `
+    <tr>
+      <td><code style="font-family:'JetBrains Mono',monospace;font-size:.8rem">${esc(p.ref)}</code></td>
+      <td>${esc(p.learner)}</td>
+      <td>${esc(p.course)}</td>
+      <td><strong>ETB ${p.amount}</strong></td>
+      <td>${esc(p.date)}</td>
+      <td><span class="status-pill published">${esc(p.status)}</span></td>
+    </tr>
+  `).join('');
+}
+
+/* ----- Analytics chart ----- */
+function renderAnalyticsChart(){
+  const chart = document.getElementById('analyticsChart');
+  if(!chart) return;
+  const data = [
+    { label:'Logic',    value:12800 },
+    { label:'AI/ML',    value:20300 },
+    { label:'Python',   value:48000 },
+    { label:'Design',   value:15600 },
+    { label:'Public Sp',value:21000 }
+  ];
+  const max = Math.max(...data.map(d => d.value));
+  chart.innerHTML = data.map(d => {
+    const pct = Math.round((d.value / max) * 100);
+    const label = d.value >= 1000 ? Math.round(d.value/1000) + 'K' : d.value;
+    return `<div class="chart-bar" style="height:${pct}%" data-value="${label}" data-label="${d.label}"></div>`;
+  }).join('');
+}
+
+/* ----- Recent activity ----- */
+function renderRecentActivity(){
+  const container = document.getElementById('recentActivity');
+  if(!container) return;
+  const activities = [
+    { icon:'📚', text:'New course published: <strong>Design Thinking Sprint</strong>', time:'12 minutes ago' },
+    { icon:'👤', text:'<strong>Tesfaye Ayele</strong> completed the AI & ML Foundations capstone', time:'1 hour ago' },
+    { icon:'💳', text:'Telebirr payment received: <strong>ETB 150</strong> from Yonas Tadesse', time:'2 hours ago' },
+    { icon:'💬', text:'New discussion thread in <strong>Leading a School in the AI Era</strong>', time:'3 hours ago' },
+    { icon:'🏅', text:'<strong>Hana Girma</strong> earned the Public Speaking certificate', time:'5 hours ago' }
+  ];
+  container.innerHTML = activities.map(a => `
+    <div style="display:flex;gap:14px;padding:13px 0;border-bottom:1px solid var(--border);align-items:center">
+      <div class="tbl-icon">${a.icon}</div>
+      <div style="flex:1">
+        <div style="font-size:.88rem">${a.text}</div>
+        <small style="font-size:.74rem;color:var(--muted)">${a.time}</small>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ============================================================================
+   6. COURSE DESIGNER
+   ============================================================================ */
+let designerModules = [];
+
+function openCourseEditor(courseId){
+  if(courseId){
+    const c = state.courses.find(x => x.id === courseId);
+    if(!c){ showToast('Course not found','error'); return; }
+    state.editingCourseId = courseId;
+    document.getElementById('designerTitle').textContent = 'Edit Course';
+    document.getElementById('dTitle').value = c.title || '';
+    document.getElementById('dDesc').value = c.desc || '';
+    document.getElementById('dCategory').value = c.category || 'digital';
+    document.getElementById('dLevel').value = c.level || 'Beginner';
+    document.getElementById('dDelivery').value = c.delivery || 'hybrid';
+    document.getElementById('dDrip').value = c.drip || 'none';
+    document.getElementById('dPrice').value = c.price || 0;
+    document.getElementById('dHours').value = c.hours || 12;
+    document.getElementById('dInstructor').value = c.instructor || 'Academy Faculty';
+    document.getElementById('dCert').value = c.cert || '';
+    document.getElementById('dOutcomes').value = (c.outcomes || []).join('\n');
+    designerModules = JSON.parse(JSON.stringify(c.modules || []));
+  } else {
+    state.editingCourseId = null;
+    document.getElementById('designerTitle').textContent = 'Create a New Course';
+    document.getElementById('dTitle').value = '';
+    document.getElementById('dDesc').value = '';
+    document.getElementById('dCategory').value = 'digital';
+    document.getElementById('dLevel').value = 'Beginner';
+    document.getElementById('dDelivery').value = 'hybrid';
+    document.getElementById('dDrip').value = 'none';
+    document.getElementById('dPrice').value = 0;
+    document.getElementById('dHours').value = 12;
+    document.getElementById('dInstructor').value = 'Academy Faculty';
+    document.getElementById('dCert').value = '';
+    document.getElementById('dOutcomes').value = '';
+    designerModules = [];
+  }
+  renderModuleBuilder();
+  adminGo('adminDesigner');
+}
+
+function addModuleToDesigner(){
+  designerModules.push({
+    id: uid('m'),
+    title: '',
+    intro: '',
+    topics: '',
+    lessons: []
+  });
+  renderModuleBuilder();
+}
+
+function removeModuleFromDesigner(id){
+  designerModules = designerModules.filter(m => m.id !== id);
+  renderModuleBuilder();
+}
+
+function addLessonToModule(moduleId){
+  const m = designerModules.find(x => x.id === moduleId);
+  if(!m) return;
+  if(!m.lessons) m.lessons = [];
+  m.lessons.push({ id: uid('l'), title:'', duration:'' });
+  renderModuleBuilder();
+}
+
+function removeLesson(moduleId, lessonId){
+  const m = designerModules.find(x => x.id === moduleId);
+  if(!m) return;
+  m.lessons = (m.lessons || []).filter(l => l.id !== lessonId);
+  renderModuleBuilder();
+}
+
+function renderModuleBuilder(){
+  const container = document.getElementById('moduleBuilder');
+  if(!designerModules.length){
+    container.innerHTML = `
+      <div class="empty-state">
+        <span class="es-icon">📦</span>
+        <h3>No modules yet</h3>
+        <p>Add modules to build the curriculum. Each module holds lessons, an intro and a topic list.</p>
+        <button class="btn btn-primary btn-sm" onclick="addModuleToDesigner()">➕ Add First Module</button>
+      </div>`;
+    return;
+  }
+  container.innerHTML = designerModules.map((m, idx) => `
+    <div class="builder-module" data-module-id="${m.id}">
+      <button class="builder-module-del" onclick="removeModuleFromDesigner('${m.id}')" title="Delete module">🗑</button>
+      <div class="builder-module-head">
+        <div class="builder-module-num">${idx + 1}</div>
+        <input type="text" placeholder="Module title (e.g. Foundations of AI)"
+          value="${esc(m.title)}"
+          oninput="updateModuleField('${m.id}','title',this.value)">
+      </div>
+      <div class="builder-module-body">
+        <label style="font-size:.76rem;font-weight:700;color:var(--muted)">Module intro</label>
+        <textarea placeholder="A short paragraph describing what this module covers."
+          oninput="updateModuleField('${m.id}','intro',this.value)">${esc(m.intro)}</textarea>
+
+        <label style="font-size:.76rem;font-weight:700;color:var(--muted)">Topics / learning outcomes (one per line)</label>
+        <textarea placeholder="Key concepts&#10;Practical applications&#10;Case studies"
+          oninput="updateModuleField('${m.id}','topics',this.value)">${esc(m.topics)}</textarea>
+
+        <label style="font-size:.76rem;font-weight:700;color:var(--muted);margin-top:4px">Lessons &amp; live sessions</label>
+        ${(m.lessons || []).map(l => `
+          <div class="lesson-row">
+            <input type="text" placeholder="Lesson title"
+              value="${esc(l.title)}"
+              oninput="updateLessonField('${m.id}','${l.id}','title',this.value)">
+            <input type="text" placeholder="Duration (e.g. 30 min)"
+              value="${esc(l.duration)}"
+              oninput="updateLessonField('${m.id}','${l.id}','duration',this.value)">
+            <button class="lesson-del" onclick="removeLesson('${m.id}','${l.id}')" title="Remove">✕</button>
+          </div>
+        `).join('')}
+        <button class="add-lesson-btn" onclick="addLessonToModule('${m.id}')">➕ Add lesson</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function updateModuleField(id, field, value){
+  const m = designerModules.find(x => x.id === id);
+  if(m) m[field] = value;
+}
+
+function updateLessonField(moduleId, lessonId, field, value){
+  const m = designerModules.find(x => x.id === moduleId);
+  if(!m) return;
+  const l = (m.lessons || []).find(x => x.id === lessonId);
+  if(l) l[field] = value;
+}
+
+function saveCourseFromDesigner(){
+  const title = document.getElementById('dTitle').value.trim();
+  const desc  = document.getElementById('dDesc').value.trim();
+
+  if(!title || title.length < 3){
+    showToast('Please enter a course title (at least 3 characters).','error');
+    return;
+  }
+  if(!desc || desc.length < 10){
+    showToast('Please enter a course description.','error');
+    return;
+  }
+  if(!designerModules.length){
+    showToast('Add at least one module before saving.','error');
+    return;
+  }
+
+  const outcomes = document.getElementById('dOutcomes').value
+    .split('\n').map(s => s.trim()).filter(Boolean);
+
+  const catId = document.getElementById('dCategory').value;
+  const meta  = domainMeta(catId);
+
+  const courseData = {
+    id: state.editingCourseId || uid('c'),
+    title,
+    desc,
+    category: catId,
+    level: document.getElementById('dLevel').value,
+    delivery: document.getElementById('dDelivery').value,
+    drip: document.getElementById('dDrip').value,
+    price: Number(document.getElementById('dPrice').value) || 0,
+    hours: Number(document.getElementById('dHours').value) || 12,
+    instructor: document.getElementById('dInstructor').value.trim() || 'Academy Faculty',
+    cert: document.getElementById('dCert').value.trim() || (title + ' — Certificate of Completion'),
+    outcomes,
+    icon: meta.icon,
+    color: meta.color,
+    modules: designerModules.map((m, i) => ({
+      id: m.id || uid('m'),
+      num: i + 1,
+      title: m.title || ('Module ' + (i + 1)),
+      intro: m.intro || '',
+      topics: (m.topics || '').split('\n').map(s => s.trim()).filter(Boolean),
+      lessons: m.lessons || []
+    })),
+    status: 'published',
+    createdAt: new Date().toISOString()
+  };
+
+  if(state.editingCourseId){
+    const idx = state.courses.findIndex(c => c.id === state.editingCourseId);
+    if(idx >= 0) state.courses[idx] = Object.assign(state.courses[idx], courseData);
+    showToast('✅ Course updated successfully!','success');
+  } else {
+    state.courses.push(courseData);
+    showToast('🚀 Course published successfully!','success');
+  }
+
+  state.editingCourseId = null;
+  designerModules = [];
+  saveState();
+  renderCourses();
+  adminGo('adminCourses');
+}
+
+function duplicateCourse(id){
+  const c = state.courses.find(x => x.id === id);
+  if(!c) return;
+  const copy = JSON.parse(JSON.stringify(c));
+  copy.id = uid('c');
+  copy.title = c.title + ' (Copy)';
+  copy.createdAt = new Date().toISOString();
+  state.courses.push(copy);
+  saveState();
+  renderCourses();
+  renderAdmin();
+  showToast('📋 Course duplicated','success');
+}
+
+function deleteCourse(id){
+  if(!confirm('Delete this course? This cannot be undone.')) return;
+  state.courses = state.courses.filter(c => c.id !== id);
+  saveState();
+  renderCourses();
+  renderAdmin();
+  showToast('Course deleted','success');
+}
+
+/* ============================================================================
+   7. UPLOAD / IMPORT
+   ============================================================================ */
+const dropzone = document.getElementById('uploadDropzone');
+const uploadInput = document.getElementById('uploadInput');
+
+if(dropzone){
+  dropzone.addEventListener('click', () => uploadInput.click());
+  dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('over'); });
+  dropzone.addEventListener('dragleave', () => dropzone.classList.remove('over'));
+  dropzone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropzone.classList.remove('over');
+    const file = e.dataTransfer.files && e.dataTransfer.files[0];
+    if(file) handleFile(file);
+  });
+  uploadInput.addEventListener('change', e => {
+    const file = e.target.files && e.target.files[0];
+    if(file) handleFile(file);
+    e.target.value = '';
+  });
+}
+
+function handleFile(file){
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const text = String(ev.target.result || '');
+    const name = file.name.toLowerCase();
+    let course = null;
+    try{
+      if(name.endsWith('.json')) course = parseJSON(text, file.name);
+      else if(name.endsWith('.csv')) course = parseCSV(text, file.name);
+      else if(name.endsWith('.md') || name.endsWith('.markdown')) course = parseMarkdown(text, file.name);
+      else course = parsePlainText(text, file.name);
+    }catch(err){
+      showToast('Import failed: ' + err.message, 'error');
+      return;
+    }
+    if(course){
+      state.courses.push(course);
+      saveState();
+      renderCourses();
+      renderAdmin();
+      showToast(`✅ Imported "${course.title}" — ${course.modules.length} modules`,'success');
+      adminGo('adminCourses');
+    }
+  };
+  reader.onerror = () => showToast('Could not read the file','error');
+  reader.readAsText(file);
+}
+
+function importPastedCourse(){
+  const text = document.getElementById('uploadPaste').value.trim();
+  if(!text || text.length < 20){
+    showToast('Please paste some course content first.','error');
+    return;
+  }
+  let course = null;
+  try{
+    if(text.trim().startsWith('{') || text.trim().startsWith('[')){
+      course = parseJSON(text, 'pasted.json');
+    } else if(text.includes(',') && text.split('\n')[0].split(',').length >= 3 && text.split('\n').length > 2){
+      course = parseCSV(text, 'pasted.csv');
+    } else if(/#\s/.test(text)){
+      course = parseMarkdown(text, 'pasted.md');
+    } else {
+      course = parsePlainText(text, 'pasted.txt');
+    }
+  }catch(err){
+    showToast('Import failed: ' + err.message, 'error');
+    return;
+  }
+  if(course){
+    state.courses.push(course);
+    saveState();
+    renderCourses();
+    renderAdmin();
+    showToast(`✅ Imported "${course.title}" — ${course.modules.length} modules`,'success');
+    adminGo('adminCourses');
+  }
+}
+
+function importFromUrl(){
+  const url = document.getElementById('uploadUrl').value.trim();
+  if(!url || !/^https?:\/\//i.test(url)){
+    showToast('Please enter a valid http(s) URL.','error');
+    return;
+  }
+  // Demo — build a course shell from the URL
+  const slug = url.split('/').filter(Boolean).pop() || 'imported';
+  const title = slug.replace(/[-_]/g,' ').replace(/\.(html?|php)$/i,'')
+                    .replace(/\b\w/g, c => c.toUpperCase());
+  const course = buildCourseFromTopic(title, url);
+  state.courses.push(course);
+  saveState();
+  renderCourses();
+  renderAdmin();
+  showToast(`✅ Imported "${course.title}" from URL`,'success');
+  adminGo('adminCourses');
+}
+
+function loadSampleUpload(kind){
+  const samples = {
+    md: `# Customer Service Masterclass
+
+A practical programme for frontline staff and team leads.
+
+## Foundations of Great Service
+- The service mindset
+- Understanding customer expectations
+- Service quality dimensions
+
+## Communication Skills
+- Active listening
+- Empathy statements
+- De-escalation techniques
+
+## Handling Complaints
+- Complaint lifecycle
+- Root cause analysis
+- Follow-up and closure
+
+## Capstone Project
+- Auditing current service
+- Designing the improvement
+- Presenting to stakeholders`,
+    json: JSON.stringify({
+      title: 'Workplace Safety Essentials',
+      description: 'Practical safety training for modern workplaces',
+      modules: [
+        { title:'Introduction to Workplace Safety', topics:['Legal responsibilities','Common hazards','Safety mindset'] },
+        { title:'Risk Assessment', topics:['Identifying hazards','Evaluating risk','Implementing controls'] },
+        { title:'Emergency Procedures', topics:['Fire safety','First aid basics','Incident reporting'] },
+        { title:'Building a Safety Culture', topics:['Leadership commitment','Employee engagement','Continuous improvement'] }
+      ]
+    }, null, 2),
+    csv: `title,topics,intro,hours
+Guest Welcome & First Impressions,"greeting standards;check-in flow;accessibility",Setting the tone for every guest,3
+Room & Service Standards,"housekeeping;amenities;inspection",Delivering consistent quality,4
+Food & Beverage Service,"service sequence;menu knowledge;dietary needs",Professional F&B fundamentals,4
+Handling Guest Complaints,"listening;service recovery;follow-up",Turning problems into loyalty,3
+Capstone: Service Improvement Plan,"audit;design;presentation",A practical improvement project,4`
+  };
+  document.getElementById('uploadPaste').value = samples[kind];
+  showToast('Sample loaded — click Import to add it','success');
+}
+
+/* --- Parsers --- */
+function buildCourseFromTopic(topic, sourceUrl){
+  const meta = domainMeta('digital');
+  return {
+    id: uid('c'),
+    title: topic,
+    desc: 'Imported course on ' + topic,
+    category: 'digital',
+    level: 'Beginner',
+    delivery: 'hybrid',
+    drip: 'none',
+    price: 0,
+    hours: 12,
+    instructor: 'Academy Faculty',
+    cert: topic + ' — Certificate of Completion',
+    outcomes: [],
+    icon: meta.icon,
+    color: meta.color,
+    sourceUrl,
+    modules: [
+      { id:uid('m'), num:1, title:'Foundations of ' + topic, intro:'', topics:['Key concepts','Core vocabulary','Historical context'] },
+      { id:uid('m'), num:2, title:'Practical Application',     intro:'', topics:['Tools and techniques','Hands-on practice','Common pitfalls'] },
+      { id:uid('m'), num:3, title:'Strategy & Ethics',         intro:'', topics:['Responsible practice','Governance','Real-world cases'] },
+      { id:uid('m'), num:4, title:'Capstone Project',          intro:'', topics:['Integration','Portfolio','Certification'] }
+    ],
+    status: 'published',
+    createdAt: new Date().toISOString()
+  };
+}
+
+function parseJSON(text, filename){
+  let obj;
+  try{ obj = JSON.parse(text); }
+  catch(e){ throw new Error('Invalid JSON: ' + e.message); }
+  const title = obj.title || obj.name || filename.replace(/\.[a-z]+$/i,'').replace(/[-_]/g,' ');
+  const modulesRaw = obj.modules || obj.lessons || obj.units || (Array.isArray(obj) ? obj : null);
+  if(!modulesRaw || !modulesRaw.length) throw new Error('No modules found in JSON.');
+  const meta = domainMeta('digital');
+  return {
+    id: uid('c'),
+    title,
+    desc: obj.description || obj.desc || 'Imported from JSON',
+    category: obj.category || 'digital',
+    level: obj.level || 'Beginner',
+    delivery: obj.delivery || 'hybrid',
+    drip: obj.drip || 'none',
+    price: Number(obj.price) || 0,
+    hours: Number(obj.hours) || modulesRaw.length * 4,
+    instructor: obj.instructor || 'Academy Faculty',
+    cert: obj.cert || (title + ' — Certificate of Completion'),
+    outcomes: obj.outcomes || [],
+    icon: meta.icon, color: meta.color,
+    modules: modulesRaw.map((m, i) => ({
+      id: uid('m'),
+      num: i + 1,
+      title: m.title || m.name || ('Module ' + (i + 1)),
+      intro: m.intro || m.description || '',
+      topics: Array.isArray(m.topics) ? m.topics : (typeof m.topics === 'string' ? m.topics.split(/[;\n]/) : [])
+    })),
+    status: 'published',
+    createdAt: new Date().toISOString()
+  };
+}
+
+function parseCSV(text, filename){
+  const rows = text.split(/\r?\n/).map(r => r.trim()).filter(Boolean);
+  if(rows.length < 2) throw new Error('CSV needs a header and at least one row');
+  const splitRow = row => {
+    const out = []; let cur = '', inQ = false;
+    for(let i = 0; i < row.length; i++){
+      const ch = row[i];
+      if(ch === '"'){ if(inQ && row[i+1] === '"'){ cur += '"'; i++; } else inQ = !inQ; }
+      else if(ch === ',' && !inQ){ out.push(cur.trim()); cur = ''; }
+      else cur += ch;
+    }
+    out.push(cur.trim());
+    return out;
+  };
+  const headers = splitRow(rows[0]).map(h => h.toLowerCase().replace(/[^a-z]/g,''));
+  const idx = name => headers.indexOf(name);
+  const iTitle = idx('title') >= 0 ? idx('title') : idx('module');
+  if(iTitle < 0) throw new Error('CSV needs a "title" column');
+  const iTopics = idx('topics');
+  const iIntro  = idx('intro');
+  const iHours  = idx('hours');
+
+  const title = filename.replace(/\.[a-z]+$/i,'').replace(/[-_]/g,' ');
+  const meta = domainMeta('digital');
+
+  const modules = [];
+  for(let r = 1; r < rows.length; r++){
+    const cells = splitRow(rows[r]);
+    const mTitle = cells[iTitle];
+    if(!mTitle) continue;
+    const topics = iTopics >= 0 && cells[iTopics]
+      ? cells[iTopics].split(/[;|]/).map(t => t.trim()).filter(Boolean)
+      : [];
+    modules.push({
+      id: uid('m'),
+      num: modules.length + 1,
+      title: mTitle,
+      intro: iIntro >= 0 && cells[iIntro] ? cells[iIntro] : '',
+      topics
+    });
+  }
+  if(!modules.length) throw new Error('No usable rows found');
+  return {
+    id: uid('c'), title,
+    desc: 'Imported from CSV',
+    category: 'digital', level: 'Beginner',
+    delivery: 'hybrid', drip: 'none', price: 0,
+    hours: modules.length * 4,
+    instructor: 'Academy Faculty',
+    cert: title + ' — Certificate of Completion',
+    outcomes: [],
+    icon: meta.icon, color: meta.color,
+    modules, status: 'published',
+    createdAt: new Date().toISOString()
+  };
+}
+
+function parseMarkdown(text, filename){
+  const lines = text.split(/\r?\n/);
+  const modules = [];
+  let title = '';
+  let current = null;
+
+  const finalize = () => {
+    if(!current) return;
+    if(!current.topics.length) current.topics = ['Overview','Practical application','Reflection'];
+    modules.push({
+      id: uid('m'), num: modules.length + 1,
+      title: current.title, intro: current.intro, topics: current.topics
+    });
+    current = null;
+  };
+
+  for(const raw of lines){
+    const t = raw.trim();
+    if(!t) continue;
+    if(/^#\s+/.test(t) && !/^##/.test(t)){
+      const candidate = t.replace(/^#\s+/,'').trim();
+      if(!title) title = candidate;
+      continue;
+    }
+    if(/^##\s+/.test(t) && !/^###/.test(t)){
+      finalize();
+      current = { title: t.replace(/^##\s+/,'').trim(), intro:'', topics:[] };
+      continue;
+    }
+    if(/^###\s+/.test(t)){
+      if(current) current.topics.push(t.replace(/^###\s+/,'').trim());
+      continue;
+    }
+    const bl = t.match(/^[-*•]\s+(.+)$/);
+    if(bl && current){ current.topics.push(bl[1].replace(/\*\*/g,'').replace(/`/g,'').trim()); continue; }
+    const nl = t.match(/^\d+[\.\)]\s+(.+)$/);
+    if(nl && current){ current.topics.push(nl[1].replace(/\*\*/g,'').replace(/`/g,'').trim()); continue; }
+    if(current && !current.intro && t.length > 20) current.intro = t.replace(/[*_`]/g,'');
+  }
+  finalize();
+
+  if(!title) title = filename.replace(/\.[a-z]+$/i,'').replace(/[-_]/g,' ');
+  if(!modules.length) throw new Error('No modules found in Markdown');
+  const meta = domainMeta('digital');
+  return {
+    id: uid('c'), title,
+    desc: 'Imported from Markdown',
+    category: 'digital', level: 'Beginner',
+    delivery: 'hybrid', drip: 'none', price: 0,
+    hours: modules.length * 4,
+    instructor: 'Academy Faculty',
+    cert: title + ' — Certificate of Completion',
+    outcomes: [],
+    icon: meta.icon, color: meta.color,
+    modules, status: 'published',
+    createdAt: new Date().toISOString()
+  };
+}
+
+function parsePlainText(text, filename){
+  const lines = text.split(/\r?\n/);
+  const modules = [];
+  let title = '';
+  let current = null;
+
+  const headerPatterns = [
+    /^(?:module|week|unit|lesson|session|part|chapter)\s*\d+\s*[:\-–—]?\s*(.+)$/i,
+    /^([A-Z][A-Z0-9 ,\-&']{6,90})$/
+  ];
+
+  const finalize = () => {
+    if(!current) return;
+    if(!current.topics.length) current.topics = ['Overview','Application','Reflection'];
+    modules.push({
+      id: uid('m'), num: modules.length + 1,
+      title: current.title, intro:'', topics: current.topics
+    });
+    current = null;
+  };
+
+  for(const raw of lines){
+    const t = raw.trim();
+    if(!t) continue;
+    if(!title && t.length >= 6 && t.length <= 100 &&
+       !headerPatterns.some(p => p.test(t)) && !/^[-*•\d]/.test(t)){
+      title = t.replace(/[*_`#]/g,'').trim();
+      continue;
+    }
+    let matched = null;
+    for(const p of headerPatterns){ const m = t.match(p); if(m){ matched = (m[1] || '').trim(); break; } }
+    if(matched && matched.length > 3){ finalize(); current = { title: matched, intro:'', topics: [] }; continue; }
+    const bl = t.match(/^[-*•·]\s+(.+)$/) || t.match(/^\d+[\.\)]\s+(.+)$/);
+    if(bl && current) current.topics.push(bl[1].replace(/[*_`]/g,'').trim());
+  }
+  finalize();
+
+  if(!title) title = filename.replace(/\.[a-z]+$/i,'').replace(/[-_]/g,' ');
+  if(!modules.length){
+    // fallback: split text into 4 parts
+    const sentences = text.split(/(?<=[.!?])\s+/).filter(s => s.length > 20);
+    const chunk = Math.max(1, Math.ceil(sentences.length / 4));
+    for(let i = 0; i < 4; i++){
+      modules.push({
+        id: uid('m'), num: i + 1,
+        title: 'Part ' + (i + 1),
+        intro: sentences.slice(i*chunk, (i+1)*chunk).join(' ').slice(0, 300),
+        topics: ['Core concepts','Applications']
+      });
+    }
+  }
+  const meta = domainMeta('digital');
+  return {
+    id: uid('c'), title,
+    desc: 'Imported from document',
+    category: 'digital', level: 'Beginner',
+    delivery: 'hybrid', drip: 'none', price: 0,
+    hours: modules.length * 4,
+    instructor: 'Academy Faculty',
+    cert: title + ' — Certificate of Completion',
+    outcomes: [],
+    icon: meta.icon, color: meta.color,
+    modules, status: 'published',
+    createdAt: new Date().toISOString()
+  };
+}
+
+/* ============================================================================
+   8. STUDENTS / SESSIONS / DISCUSSIONS
+   ============================================================================ */
+function addDemoStudent(){
+  const names = ['Meron Haile','Daniel Tesfaye','Sara Alemayehu','Kalkidan Mekonnen','Ermias Desta'];
+  const courses = ['Logic & Critical Reasoning','AI & ML Foundations','Python for Beginners','Design Thinking Sprint','Public Speaking'];
+  const name = names[Math.floor(Math.random()*names.length)];
+  const email = name.toLowerCase().replace(/ /g,'.') + '@school.edu.et';
+  state.students.push({
+    id: uid('s'),
+    name, email,
+    course: courses[Math.floor(Math.random()*courses.length)],
+    progress: Math.floor(Math.random() * 80) + 10,
+    lastActive: 'Just now',
+    status: 'active'
+  });
+  saveState();
+  renderAdmin();
+  renderStudentsTable();
+  updateAdminKPIs();
+  showToast('Learner added','success');
+}
+
+function removeStudent(id){
+  if(!confirm('Remove this learner?')) return;
+  state.students = state.students.filter(s => s.id !== id);
+  saveState();
+  renderAdmin();
+  showToast('Learner removed','success');
+}
+
+function addDemoSession(){
+  const months = ['Nov','Dec','Jan'];
+  state.sessions.push({
+    id: uid('se'),
+    date: String(Math.floor(Math.random()*28) + 1),
+    month: months[Math.floor(Math.random()*months.length)],
+    title: 'Live Workshop — ' + ['AI Strategy','Design Thinking','Python Q&A','Career Coaching'][Math.floor(Math.random()*4)],
+    time: '14:00 – 15:30 EAT',
+    type: ['live','hybrid','self'][Math.floor(Math.random()*3)],
+    course: 'Various'
+  });
+  saveState();
+  renderSessionsList();
+  showToast('Session scheduled','success');
+}
+
+function removeSession(id){
+  state.sessions = state.sessions.filter(s => s.id !== id);
+  saveState();
+  renderSessionsList();
+  showToast('Session removed','success');
+}
+
+/* ============================================================================
+   9. SETTINGS / EXPORT / RESET
+   ============================================================================ */
+function saveSettings(){
+  state.settings = {
+    academyName: document.getElementById('sAcademyName').value,
+    tagline:     document.getElementById('sTagline').value,
+    telebirr:    document.getElementById('sTelebirr').value,
+    accountName: document.getElementById('sAccountName').value,
+    currency:    document.getElementById('sCurrency').value,
+    defaultFee:  Number(document.getElementById('sDefaultFee').value) || 0,
+    delivery:    document.getElementById('sDelivery').value,
+    passMark:    Number(document.getElementById('sPassMark').value) || 80,
+    certTemplate:document.getElementById('sCertTemplate').value,
+    selfEnrol:   document.getElementById('sSelfEnrol').value
+  };
+  saveState();
+  showToast('✅ Settings saved','success');
+}
+
+function resetAllData(){
+  if(!confirm('Reset ALL demo data? Courses, students, sessions and payments will be cleared.')) return;
+  state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+  seedDemoData();
+  saveState();
+  renderCourses();
+  renderAdmin();
+  showToast('All data reset','success');
+}
+
+document.getElementById('exportAllBtn').addEventListener('click', () => {
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    courses: state.courses,
+    students: state.students,
+    sessions: state.sessions,
+    payments: state.payments,
+    settings: state.settings
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type:'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'academy-export-' + new Date().toISOString().slice(0,10) + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  showToast('⬇️ Exported academy data','success');
+});
+
+/* ============================================================================
+   10. INIT
+   ============================================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  loadState();
+  renderCourses();
+  renderAdmin();
+});
+</script>
+</body>
+</html>
